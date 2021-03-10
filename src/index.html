@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;" />
+  </head>
+  <body>
+    <h1>💖 Hello World!</h1>
+    <p>Welcome to your Electron application.</p>
+
+    <div id="settings" class="ui styled accordion">
+      <div class="title">
+        <i class="cog icon"></i>
+        Configuration
+      </div>
+      
+      <div class="content">
+        <div class="ui message">
+          <p>Enter the details of your Fire API Token here. This token must have the following permissions at least:</p>
+          <ul><li>List Accounts<li>Filter transactions on an Account</ul>
+        </div>
+        <form class="ui form">
+          <div class="field">
+            <label>Client ID</label>
+            <input type="text" id="clientId">
+          </div>
+          <div class="field">
+            <label>Client Key</label>
+            <input type="password" id="clientKey">
+          </div>
+          <div class="field">
+            <label>Refresh Token</label>
+            <input type="text" id="refreshToken">
+          </div>
+          <button class="ui button" id="saveconfiguration">Save Configuration</button>
+        </form>
+      </div>
+    </div>
+    <div class="ui divider"></div>
+    <div class="ui form">
+      <div class="two fields">
+        <div class="field">
+          <label>Start date</label>
+          <div class="ui calendar" id="fromDate">
+            <div class="ui input left icon">
+              <i class="calendar icon"></i>
+              <input type="text" placeholder="Start">
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>End date</label>
+          <div class="ui calendar" id="toDate">
+            <div class="ui input left icon">
+              <i class="calendar icon"></i>
+              <input type="text" placeholder="End">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <button class="ui button" id="runreport">Run Report</button>
+  <div class="ui progress" id="progressbar">
+    <div class="bar">
+      <div class="progress"></div>
+    </div>
+    <div class="label"></div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.js"></script>
+
+  </body>
+</html>

@@ -452,7 +452,7 @@ export default class CreateCsvFile {
                 csv += row + '\r\n';
             }
         }
-        fs.writeFileSync("report.csv", csv);
+        return csv;
     };
 
 }  

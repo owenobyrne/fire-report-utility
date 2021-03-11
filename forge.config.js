@@ -8,16 +8,16 @@ module.exports = {
         "platforms": ['win32'],
         "config": (arch) => {
           return {
-            name: 'fire-report-downloader',
+            name: 'fire-report-utility',
             authors: 'Owen O Byrne',
             // exe: 'fire-report-downloader.exe',
-            title: "Fire Report Downloader",
+            title: "Fire Report Utility",
             noMsi: true,
             remoteReleases: '',
-            setupExe: `fire-report-downloader-setup-${arch}.exe`,
+            // setupExe: `fire-report-downloader-setup-${arch}.exe`,
             // setupIcon: path.resolve(__dirname, 'fire-reports-icon.png'),
             iconUrl: "https://owenobyrne.s3-eu-west-1.amazonaws.com/fire-reports-icon.png",
-            certificateFile: path.resolve(__dirname, 'codesigning.pfx'),
+            certificateFile: path.resolve(__dirname, '../codesigning.pfx'),
             certificatePassword: ""
           }
         }
@@ -59,6 +59,15 @@ module.exports = {
       ]
     ],
 	publishers: [
-		// https://www.electronforge.io/config/publishers
+		{
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'owenobyrne',
+          name: 'fire-report-utility'
+        },
+        prerelease: true
+      }
+    }
 	]
 };

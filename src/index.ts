@@ -6,6 +6,9 @@ import sha256 from 'sha256';
 import OpenAPIClientAxios from 'openapi-client-axios';
 import CreateCsvFile from './csv-format';
 import Store from 'electron-store';
+import updater from 'update-electron-app';
+
+updater();
 
 const store = new Store({
   migrations: {
@@ -86,9 +89,7 @@ app.on('activate', () => {
 
 const api = new OpenAPIClientAxios({ definition: 'fire-business-api-v1.yml' });
 
-
-
-ipcMain.on("page-contents-loaded",async function (event, arg) {
+ipcMain.on("page-contents-loaded", function (event, arg) {
   console.log("I'm told the page is loaded");
   
   var apiToken : Configuration = {
@@ -99,7 +100,7 @@ ipcMain.on("page-contents-loaded",async function (event, arg) {
  
   console.log(store.store);
   mainWindow.webContents.send("configs", apiToken); 
-  client = await api.init<FireBusinessApiClient>();
+  api.init<FireBusinessApiClient>().then((c : FireBusinessApiClient) => { client = c; });
   
 });
 
@@ -123,8 +124,8 @@ let getTransactions = function(fromDate: number, toDate: number, limit: number, 
     if (offset + limit < total) {
       getTransactions(fromDate, toDate, limit, offset + limit, callback);
     } else {
-      CreateCsvFile.generate(transactions, true, "filename.csv");
-      callback();
+      var csv = CreateCsvFile.generate(transactions, true, "filename.csv");
+      callback(csv);
     }
 
 
@@ -156,13 +157,27 @@ ipcMain.on("run-report", function (event, arg) {
     .then(res => { 
         accessToken = res.data.accessToken; 
 
-        getTransactions(fromDate, toDate, limit, offset, function() {
+        getTransactions(fromDate, toDate, limit, offset, function(csv : string) {
+          fs.writeFileSync(path.join(app.getPath("userData"), "report.csv"), csv);
           var savePath:string = dialog.showSaveDialogSync({ 
             title: "Save Report As...", 
             defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace("-", ".")+"-"+arg.toDate.replace("-", ".")+".csv")
           });
 
           console.log(savePath);
+
+          if (savePath != undefined) {
+            // save this directory as the default going foward
+            store.set("savePath", path.dirname(savePath));
+
+            fs.copyFileSync(
+              path.join(app.getPath("userData"), "report.csv"), 
+              savePath
+            );
+
+            fs.rmSync(path.join(app.getPath("userData"), "report.csv"));
+          }
+
         });
         
 

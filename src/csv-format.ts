@@ -226,9 +226,6 @@ var getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
             formattedTxn.refId = txn.refId;
             formattedTxn.ican = txn.ican; 
 
-            console.log(txn.type);
-            console.log(getByType(txn.type));
-            console.log("---");
             var type:any = getByType(txn.type);
             formattedTxn.type = !type ? txn.type : type.name;
             
@@ -256,10 +253,12 @@ var getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
             // formattedTxn.relatedParty.business = {};
             // formattedTxn.relatedParty.business.alias = business.alias;
             
-            var account = relatedParty.account;
-            if(account == null) {
+            if (relatedParty.type == "FIRE_ACCOUNT" || relatedParty.type == "WITHDRAWAL_ACCOUNT" || relatedParty.type == "EXTERNAL_ACCOUNT") {
+                var account = relatedParty.account
+            } else {
                 account = {};
             }
+
             formattedTxn.relatedParty.account = {};
             formattedTxn.relatedParty.account.id = account.id;
             formattedTxn.relatedParty.account.alias = account.alias;
@@ -268,15 +267,14 @@ var getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
             formattedTxn.relatedParty.account.bic = account.bic;
             formattedTxn.relatedParty.account.iban = account.iban;
             
-            // var card = relatedParty.card;
-            // if(card == null) {
-            //     card = {};
-            // }
-            // formattedTxn.relatedParty.card = {};
-            // formattedTxn.relatedParty.card.cardType = card.cardType;
-            // formattedTxn.relatedParty.card.cardLastFourDigits = card.cardLastFourDigits;
+            var card = txn.card;
+            if(card == null) {
+                card = {};
+            }
+            formattedTxn.relatedParty.card = {};
+            formattedTxn.relatedParty.card.cardType = card.provider;
+            formattedTxn.relatedParty.card.cardLastFourDigits = card.maskedPan;
             
-            console.log(txn.currency);
             formattedTxn.currency = txn.currency.code
 
             formattedTxn.feeAmount =  (txn.feeAmount / 100).toLocaleString('en-IE',{minimumFractionDigits: 2});
@@ -305,8 +303,8 @@ var getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
             formattedTxn.fxTradeDetails.buyCurrency = fxTradeDetails.buyCurrency;
             formattedTxn.fxTradeDetails.sellCurrency = fxTradeDetails.sellCurrency;
             formattedTxn.fxTradeDetails.fixedSide = fxTradeDetails.fixedSide;
-            formattedTxn.fxTradeDetails.buyAmount = (fxTradeDetails.buyAmount / 100).toLocaleString('en-IE',{minimumFractionDigits: 2});
-            formattedTxn.fxTradeDetails.sellAmount = (fxTradeDetails.sellAmount / 100).toLocaleString('en-IE',{minimumFractionDigits: 2});
+            formattedTxn.fxTradeDetails.buyAmount = fxTradeDetails.buyAmount ? (fxTradeDetails.buyAmount / 100).toLocaleString('en-IE',{minimumFractionDigits: 2}) : '';
+            formattedTxn.fxTradeDetails.sellAmount = fxTradeDetails.sellAmount ? (fxTradeDetails.sellAmount / 100).toLocaleString('en-IE',{minimumFractionDigits: 2}) : '';
             formattedTxn.fxTradeDetails.rate4d = fxTradeDetails.rate4d;
             
             response.push(formattedTxn);

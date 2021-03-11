@@ -1,5 +1,5 @@
 # Fire Report Utility
-A desktop utility fr downloading Fire reports.
+A desktop utility for downloading Fire reports.
 
 # Building
 To generate the API type file from the OpenAPI def first resolve all $refs. There's a bug in the typegen script that results in some refs being ignored.

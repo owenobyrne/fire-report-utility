@@ -11,14 +11,14 @@ contextBridge.exposeInMainWorld(
     "api", {
         send: (channel : string, data : any) => {
             // whitelist channels
-            let validChannels = ["page-contents-loaded", "run-report", "save-configuration"];
+            let validChannels = ["page-contents-loaded", "run-report", "save-configuration", "get-accounts"];
             if (validChannels.includes(channel)) {
                 console.log(`Sending a message to ${channel}...`);
                 ipcRenderer.send(channel, data);
             }
         },
         receive: (channel : string, func : Function) => {
-            let validChannels = ["configs", "run-report-finished", "progress-update", "configuration-saved"];
+            let validChannels = ["configs", "run-report-finished", "progress-update", "configuration-saved", "accounts"];
             if (validChannels.includes(channel)) {
                 console.log(`Setting up a listener on ${channel}`);
                 // Deliberately strip event as it includes `sender` 

@@ -1,9 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { Client as FireBusinessApiClient, Components } from './types/fire-business-api';
+import { Client as FireBusinessApiClient, Components, Paths } from './types/fire-business-api';
 import sha256 from 'sha256';
-import OpenAPIClientAxios from 'openapi-client-axios';
+import { OpenAPIClientAxios, AxiosResponse } from 'openapi-client-axios';
 import CreateCsvFile from './csv-format';
 import Store from 'electron-store';
 import updater from 'update-electron-app';
@@ -21,6 +21,7 @@ const store = new Store({
     clientId: '',
     clientKey: '',
     refreshToken: '',
+    selectedAccount: null,
     savePath: app.getPath("downloads")
   }
 });
@@ -28,9 +29,11 @@ const store = new Store({
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-let accessToken = "";
+let accessToken :string = "";
 let mainWindow : BrowserWindow;
 let client : FireBusinessApiClient;
+let accounts : Components.Schemas.Account[] = [];
+let transactions:Components.Schemas.Transaction[] = [];
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -88,7 +91,36 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
+var initialiseApiClient = function() {
+  return api.init<FireBusinessApiClient>();
+}
+
+var getAccessToken = function() {
+  var nonce = Math.floor(new Date().getTime()/1000.0);
+  var clientSecret = sha256(nonce + store.get('clientKey'));
+
+  return client.authenticate(null, {clientId: store.get('clientId'), clientSecret:  clientSecret, refreshToken: store.get('refreshToken'), nonce: nonce, grantType: "AccessToken"});
+};
+
+var loadAccounts = function() {
+  return client.getAccounts(null, null,  { headers: { "Authorization": "Bearer " + accessToken }});
+}
+
+
 const api = new OpenAPIClientAxios({ definition: path.join(__dirname, "static/fire-business-api-v1.yml") });
+
+if (store.get("clientId").length == 36) {
+  initialiseApiClient().then((c : FireBusinessApiClient) => { 
+    console.log(c);
+    client = c;
+
+    getAccessToken().then(gatres => { 
+      console.log(gatres);
+      accessToken = gatres.data.accessToken;
+    });
+
+  });
+}
 
 ipcMain.on("page-contents-loaded", function (event, arg) {
   
@@ -98,29 +130,28 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
     refreshToken: store.get('refreshToken')
   };
  
-  if (isDev) { console.log(store.store); }
+  if (isDev) { console.log(JSON.stringify(store.store)); }
 
-  mainWindow.webContents.send("configs", apiToken); 
-  api.init<FireBusinessApiClient>().then((c : FireBusinessApiClient) => { client = c; });
-  
+  mainWindow.webContents.send("configs", apiToken);   
 });
 
-var transactions:Components.Schemas.Transaction[] = [];
 
-let getTransactions = function(fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
+
+let getTransactions = function(ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
   client.getTransactionsFilteredById(
-    {ican: 2150, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
+    {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
     null, 
     { headers: { "Authorization": "Bearer " + accessToken }}
   ).then(res => {
     var total = res.data.total;
     
+    console.log(JSON.stringify(res.data.transactions));
     transactions.push(...res.data.transactions);
 
     mainWindow.webContents.send("progress-update", { total: res.data.total, progress: (offset + limit > total ? total : offset + limit) }); 
   
     if (offset + limit < total) {
-      getTransactions(fromDate, toDate, limit, offset + limit, callback);
+      getTransactions(ican, fromDate, toDate, limit, offset + limit, callback);
     } else {
       var csv = CreateCsvFile.generate(transactions, true, "filename.csv");
       callback(csv);
@@ -129,6 +160,25 @@ let getTransactions = function(fromDate: number, toDate: number, limit: number, 
 
   });
 }
+
+ipcMain.on("get-accounts", function (event, arg) {
+  loadAccounts().then((res) => {
+    console.log(typeof res.data);
+
+    if ((res.data as Paths.GetAccounts.Responses.$200).accounts) {
+      accounts = (res.data as Paths.GetAccounts.Responses.$200).accounts;
+      mainWindow.webContents.send("accounts", accounts, store.get("selectedAccount"));   
+
+    } 
+   
+  }).catch((err) => {
+      // error
+      console.error(err);
+    
+  })
+});
+
+
 
 ipcMain.on("save-configuration", function (event, arg) {
   let configs : Configuration = arg.configs;
@@ -145,41 +195,34 @@ ipcMain.on("run-report", function (event, arg) {
   // blank the array each time
   transactions = [];
 
+  store.set("selectedAccount", arg.ican);
+
   var fromDate = new Date(arg.fromDate + 'T00:00:00').getTime();
   var toDate = new Date(arg.toDate + 'T23:59:59').getTime();
-
-  var nonce = Math.floor(new Date().getTime()/1000.0);
-  var clientSecret = sha256(nonce + store.get('clientKey'));
   
   var offset = 0;
   var limit = 50;
 
-  client.authenticate(null, {clientId: store.get('clientId'), clientSecret:  clientSecret, refreshToken: store.get('refreshToken'), nonce: nonce, grantType: "AccessToken"})
-    .then(res => { 
-        accessToken = res.data.accessToken; 
-
-        getTransactions(fromDate, toDate, limit, offset, function(csv : string) {
-          fs.writeFileSync(path.join(app.getPath("userData"), "report.csv"), csv);
-          var savePath:string = dialog.showSaveDialogSync({ 
-            title: "Save Report As...", 
-            defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace("-", ".")+"-"+arg.toDate.replace("-", ".")+".csv")
-          });
-
-          if (savePath != undefined) {
-            // save this directory as the default going foward
-            store.set("savePath", path.dirname(savePath));
-
-            fs.copyFileSync(
-              path.join(app.getPath("userData"), "report.csv"), 
-              savePath
-            );
-
-            fs.rmSync(path.join(app.getPath("userData"), "report.csv"));
-          }
-
-        });
-        
-
+  getTransactions(arg.ican, fromDate, toDate, limit, offset, function(csv : string) {
+    fs.writeFileSync(path.join(app.getPath("userData"), "report.csv"), csv);
+    var savePath:string = dialog.showSaveDialogSync({ 
+      title: "Save Report As...", 
+      defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace("-", ".")+"-"+arg.toDate.replace("-", ".")+".csv")
     });
+
+    if (savePath != undefined) {
+      // save this directory as the default going foward
+      store.set("savePath", path.dirname(savePath));
+
+      fs.copyFileSync(
+        path.join(app.getPath("userData"), "report.csv"), 
+        savePath
+      );
+
+      fs.rmSync(path.join(app.getPath("userData"), "report.csv"));
+    }
+
+  });
+  
 
 });

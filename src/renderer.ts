@@ -1,4 +1,5 @@
 import './index.css';
+import { Components } from './types/fire-business-api'; 
 
 // typescript gets very snarky when there's no type definitions for things, 
 // and getting jquery-ui or semantic-ui to work as a bitch.
@@ -47,13 +48,17 @@ function pageLoaded(){
         }
       });
 
+    $('.ui.dropdown').dropdown();
+
     window.api.send('page-contents-loaded',"I'm ready");
 }
 
 $("#runreport").on('click', function (event : any) {
     event.preventDefault(); 
+    var selectedAccount =  $('.ui.dropdown').dropdown("get value");
+
    $("#runreport").addClass("loading");
-    window.api.send("run-report", { fromDate: getISODate($("#fromDate").calendar("get date")), toDate: getISODate($("#toDate").calendar("get date")) } ); 
+    window.api.send("run-report", { ican: selectedAccount, fromDate: getISODate($("#fromDate").calendar("get date")), toDate: getISODate($("#toDate").calendar("get date")) } ); 
 });
 
 $("#saveconfiguration").on('click', function (event : any) {
@@ -76,8 +81,11 @@ window.api.receive("configs", function(configs : Configuration) {
 
     if (configs.clientId.length != 36) {
         $('#settings').accordion("open", 0);
+    } else {
+        window.api.send('get-accounts');
     }
 });
+
 
 window.api.receive("progress-update", function(param : any) {
     console.log(param);
@@ -89,5 +97,22 @@ window.api.receive("progress-update", function(param : any) {
     if (param.progress == param.total) {
         $("#runreport").removeClass("loading");
     }
+});
+
+window.api.receive("accounts", function(accounts : Components.Schemas.Account[], selectedAccount?: number) {
+    
+    var values : any[] = [];
+
+    accounts.forEach((account) => {
+        var item : any =  { value: account.ican, name: account.name };
+        if (account.ican == selectedAccount) {
+            item.selected = true;
+        }
+        values.push(item);
+        
+    })
+
+    console.log({ values: values});
+    $('.ui.dropdown').dropdown({ values: values });
 });
 

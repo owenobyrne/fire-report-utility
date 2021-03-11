@@ -12,7 +12,7 @@ declare namespace Components {
       export type Limit = number;
     }
     namespace OffsetParam {
-      export type Offset = number;
+      export type Offset = number; // int64
     }
     namespace OrderByParam {
       export type OrderBy = "DATE";
@@ -380,6 +380,15 @@ declare namespace Components {
        * 4ADFB67A-0F5B-4A9A-9D74-34437250045C
        */
       paymentUuid?: string;
+    }
+    export interface Card {
+      cardId?: number; // int64
+      provider?: string;
+      alias?: string;
+      maskedPan?: string;
+      embossCardName?: string;
+      embossBusinessName?: string;
+      expiryDate?: string; // date-time
     }
     export interface Country {
       /**
@@ -1522,6 +1531,16 @@ declare namespace Components {
         accountNumber?: string;
       };
     } | {
+      type?: "EXTERNAL_ACCOUNT";
+      account?: {
+        id?: number; // int64
+        alias?: string;
+        nsc?: string;
+        accountNumber?: string;
+        bic?: string;
+        iban?: string;
+      };
+    } | {
       type?: "WITHDRAWAL_ACCOUNT";
       account?: {
         id?: number; // int64
@@ -1531,9 +1550,268 @@ declare namespace Components {
         bic?: string;
         iban?: string;
       };
+    } | {
+      type?: "CARD_MERCHANT";
+      cardMerchant?: {
+        /**
+         * example:
+         * 06011319
+         */
+        acquirerIdDe32?: string;
+        additionalAmtDe54?: string;
+        /**
+         * example:
+         * 177449
+         */
+        authCodeDe38?: string;
+        /**
+         * example:
+         * -90000
+         */
+        billAmt?: number; // int64
+        /**
+         * example:
+         * 978
+         */
+        billCcy?: string;
+        expiryDate?: string;
+        /**
+         * example:
+         * 5521
+         */
+        mccCode?: string;
+        /**
+         * example:
+         * 013152429
+         */
+        merchIdDe42?: string;
+        /**
+         * example:
+         * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+         */
+        merchNameDe43?: string;
+        /**
+         * example:
+         * 000001000030037299999
+         */
+        posDataDe61?: string;
+        /**
+         * example:
+         * 80266721
+         */
+        posTermnlDe41?: string;
+        /**
+         * example:
+         * 051
+         */
+        posDataDe22?: string;
+        /**
+         * example:
+         * 000000
+         */
+        procCode?: string;
+        /**
+         * example:
+         * 00
+         */
+        respCodeDe39?: string;
+        /**
+         * example:
+         * 010900006720
+         */
+        retRefNoDe37?: string;
+        /**
+         * example:
+         * 00
+         */
+        statusCode?: string;
+        /**
+         * example:
+         * 976307363
+         */
+        token?: string;
+        /**
+         * example:
+         * 9000000
+         */
+        txnAmt4d?: number; // int64
+        /**
+         * example:
+         * 978
+         */
+        txnCcy?: string;
+        /**
+         * example:
+         * IRL
+         */
+        txnCtry?: string;
+        /**
+         * example:
+         * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+         */
+        txnDesc?: string;
+        /**
+         * example:
+         * A
+         */
+        txnStatCode?: string;
+        /**
+         * example:
+         * A
+         */
+        txnType?: string;
+        /**
+         * example:
+         * 018R610500001710418C
+         */
+        additionalDataDe48?: string;
+        /**
+         * example:
+         * N
+         */
+        authorisedByGps?: string;
+        avsResult?: string;
+        /**
+         * example:
+         * 0100
+         */
+        mtId?: string;
+        recordDataDe120?: string;
+        additionalDataDe124?: string;
+      };
     };
+    export interface RelatedPartyCardMerchant {
+      type?: "CARD_MERCHANT";
+      cardMerchant?: {
+        /**
+         * example:
+         * 06011319
+         */
+        acquirerIdDe32?: string;
+        additionalAmtDe54?: string;
+        /**
+         * example:
+         * 177449
+         */
+        authCodeDe38?: string;
+        /**
+         * example:
+         * -90000
+         */
+        billAmt?: number; // int64
+        /**
+         * example:
+         * 978
+         */
+        billCcy?: string;
+        expiryDate?: string;
+        /**
+         * example:
+         * 5521
+         */
+        mccCode?: string;
+        /**
+         * example:
+         * 013152429
+         */
+        merchIdDe42?: string;
+        /**
+         * example:
+         * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+         */
+        merchNameDe43?: string;
+        /**
+         * example:
+         * 000001000030037299999
+         */
+        posDataDe61?: string;
+        /**
+         * example:
+         * 80266721
+         */
+        posTermnlDe41?: string;
+        /**
+         * example:
+         * 051
+         */
+        posDataDe22?: string;
+        /**
+         * example:
+         * 000000
+         */
+        procCode?: string;
+        /**
+         * example:
+         * 00
+         */
+        respCodeDe39?: string;
+        /**
+         * example:
+         * 010900006720
+         */
+        retRefNoDe37?: string;
+        /**
+         * example:
+         * 00
+         */
+        statusCode?: string;
+        /**
+         * example:
+         * 976307363
+         */
+        token?: string;
+        /**
+         * example:
+         * 9000000
+         */
+        txnAmt4d?: number; // int64
+        /**
+         * example:
+         * 978
+         */
+        txnCcy?: string;
+        /**
+         * example:
+         * IRL
+         */
+        txnCtry?: string;
+        /**
+         * example:
+         * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+         */
+        txnDesc?: string;
+        /**
+         * example:
+         * A
+         */
+        txnStatCode?: string;
+        /**
+         * example:
+         * A
+         */
+        txnType?: string;
+        /**
+         * example:
+         * 018R610500001710418C
+         */
+        additionalDataDe48?: string;
+        /**
+         * example:
+         * N
+         */
+        authorisedByGps?: string;
+        avsResult?: string;
+        /**
+         * example:
+         * 0100
+         */
+        mtId?: string;
+        recordDataDe120?: string;
+        additionalDataDe124?: string;
+      };
+    }
     export interface RelatedPartyExternalAccount {
-      type?: "WITHDRAWAL_ACCOUNT";
+      type?: "EXTERNAL_ACCOUNT";
       account?: {
         id?: number; // int64
         alias?: string;
@@ -1587,6 +1865,17 @@ declare namespace Components {
          * 11111111
          */
         accountNumber?: string;
+      };
+    }
+    export interface RelatedPartyWithdrawalAccount {
+      type?: "WITHDRAWAL_ACCOUNT";
+      account?: {
+        id?: number; // int64
+        alias?: string;
+        nsc?: string;
+        accountNumber?: string;
+        bic?: string;
+        iban?: string;
       };
     }
     export type To = {
@@ -1659,6 +1948,15 @@ declare namespace Components {
       myRef?: string;
       paymentRequestPublicCode?: string;
       date?: string; // date-time
+      card?: {
+        cardId?: number; // int64
+        provider?: string;
+        alias?: string;
+        maskedPan?: string;
+        embossCardName?: string;
+        embossBusinessName?: string;
+        expiryDate?: string; // date-time
+      };
       type?: string;
       dateAcknowledged?: string; // date-time
       fxTradeDetails?: {
@@ -1715,6 +2013,16 @@ declare namespace Components {
           accountNumber?: string;
         };
       } | {
+        type?: "EXTERNAL_ACCOUNT";
+        account?: {
+          id?: number; // int64
+          alias?: string;
+          nsc?: string;
+          accountNumber?: string;
+          bic?: string;
+          iban?: string;
+        };
+      } | {
         type?: "WITHDRAWAL_ACCOUNT";
         account?: {
           id?: number; // int64
@@ -1723,6 +2031,135 @@ declare namespace Components {
           accountNumber?: string;
           bic?: string;
           iban?: string;
+        };
+      } | {
+        type?: "CARD_MERCHANT";
+        cardMerchant?: {
+          /**
+           * example:
+           * 06011319
+           */
+          acquirerIdDe32?: string;
+          additionalAmtDe54?: string;
+          /**
+           * example:
+           * 177449
+           */
+          authCodeDe38?: string;
+          /**
+           * example:
+           * -90000
+           */
+          billAmt?: number; // int64
+          /**
+           * example:
+           * 978
+           */
+          billCcy?: string;
+          expiryDate?: string;
+          /**
+           * example:
+           * 5521
+           */
+          mccCode?: string;
+          /**
+           * example:
+           * 013152429
+           */
+          merchIdDe42?: string;
+          /**
+           * example:
+           * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+           */
+          merchNameDe43?: string;
+          /**
+           * example:
+           * 000001000030037299999
+           */
+          posDataDe61?: string;
+          /**
+           * example:
+           * 80266721
+           */
+          posTermnlDe41?: string;
+          /**
+           * example:
+           * 051
+           */
+          posDataDe22?: string;
+          /**
+           * example:
+           * 000000
+           */
+          procCode?: string;
+          /**
+           * example:
+           * 00
+           */
+          respCodeDe39?: string;
+          /**
+           * example:
+           * 010900006720
+           */
+          retRefNoDe37?: string;
+          /**
+           * example:
+           * 00
+           */
+          statusCode?: string;
+          /**
+           * example:
+           * 976307363
+           */
+          token?: string;
+          /**
+           * example:
+           * 9000000
+           */
+          txnAmt4d?: number; // int64
+          /**
+           * example:
+           * 978
+           */
+          txnCcy?: string;
+          /**
+           * example:
+           * IRL
+           */
+          txnCtry?: string;
+          /**
+           * example:
+           * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+           */
+          txnDesc?: string;
+          /**
+           * example:
+           * A
+           */
+          txnStatCode?: string;
+          /**
+           * example:
+           * A
+           */
+          txnType?: string;
+          /**
+           * example:
+           * 018R610500001710418C
+           */
+          additionalDataDe48?: string;
+          /**
+           * example:
+           * N
+           */
+          authorisedByGps?: string;
+          avsResult?: string;
+          /**
+           * example:
+           * 0100
+           */
+          mtId?: string;
+          recordDataDe120?: string;
+          additionalDataDe124?: string;
         };
       };
     }
@@ -2979,7 +3416,7 @@ declare namespace Paths {
        */
       export type Ican = number; // int64
       export type Limit = number;
-      export type Offset = number;
+      export type Offset = number; // int64
       /**
        * Search term to filter by from the reference field (`myRef`).
        */
@@ -2993,7 +3430,7 @@ declare namespace Paths {
       ican: Parameters.Ican; // int64
     }
     export interface QueryParameters {
-      offset?: Parameters.Offset;
+      offset?: Parameters.Offset; // int64
       limit?: Parameters.Limit;
       dateRangeFrom?: Parameters.DateRangeFrom; // int64
       dateRangeTo?: Parameters.DateRangeTo; // int64
@@ -3028,6 +3465,15 @@ declare namespace Paths {
           myRef?: string;
           paymentRequestPublicCode?: string;
           date?: string; // date-time
+          card?: {
+            cardId?: number; // int64
+            provider?: string;
+            alias?: string;
+            maskedPan?: string;
+            embossCardName?: string;
+            embossBusinessName?: string;
+            expiryDate?: string; // date-time
+          };
           type?: string;
           dateAcknowledged?: string; // date-time
           fxTradeDetails?: {
@@ -3084,6 +3530,16 @@ declare namespace Paths {
               accountNumber?: string;
             };
           } | {
+            type?: "EXTERNAL_ACCOUNT";
+            account?: {
+              id?: number; // int64
+              alias?: string;
+              nsc?: string;
+              accountNumber?: string;
+              bic?: string;
+              iban?: string;
+            };
+          } | {
             type?: "WITHDRAWAL_ACCOUNT";
             account?: {
               id?: number; // int64
@@ -3092,6 +3548,135 @@ declare namespace Paths {
               accountNumber?: string;
               bic?: string;
               iban?: string;
+            };
+          } | {
+            type?: "CARD_MERCHANT";
+            cardMerchant?: {
+              /**
+               * example:
+               * 06011319
+               */
+              acquirerIdDe32?: string;
+              additionalAmtDe54?: string;
+              /**
+               * example:
+               * 177449
+               */
+              authCodeDe38?: string;
+              /**
+               * example:
+               * -90000
+               */
+              billAmt?: number; // int64
+              /**
+               * example:
+               * 978
+               */
+              billCcy?: string;
+              expiryDate?: string;
+              /**
+               * example:
+               * 5521
+               */
+              mccCode?: string;
+              /**
+               * example:
+               * 013152429
+               */
+              merchIdDe42?: string;
+              /**
+               * example:
+               * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+               */
+              merchNameDe43?: string;
+              /**
+               * example:
+               * 000001000030037299999
+               */
+              posDataDe61?: string;
+              /**
+               * example:
+               * 80266721
+               */
+              posTermnlDe41?: string;
+              /**
+               * example:
+               * 051
+               */
+              posDataDe22?: string;
+              /**
+               * example:
+               * 000000
+               */
+              procCode?: string;
+              /**
+               * example:
+               * 00
+               */
+              respCodeDe39?: string;
+              /**
+               * example:
+               * 010900006720
+               */
+              retRefNoDe37?: string;
+              /**
+               * example:
+               * 00
+               */
+              statusCode?: string;
+              /**
+               * example:
+               * 976307363
+               */
+              token?: string;
+              /**
+               * example:
+               * 9000000
+               */
+              txnAmt4d?: number; // int64
+              /**
+               * example:
+               * 978
+               */
+              txnCcy?: string;
+              /**
+               * example:
+               * IRL
+               */
+              txnCtry?: string;
+              /**
+               * example:
+               * KILLARNEY TYRE CENTRE  V93Y6NH       IRL
+               */
+              txnDesc?: string;
+              /**
+               * example:
+               * A
+               */
+              txnStatCode?: string;
+              /**
+               * example:
+               * A
+               */
+              txnType?: string;
+              /**
+               * example:
+               * 018R610500001710418C
+               */
+              additionalDataDe48?: string;
+              /**
+               * example:
+               * N
+               */
+              authorisedByGps?: string;
+              avsResult?: string;
+              /**
+               * example:
+               * 0100
+               */
+              mtId?: string;
+              recordDataDe120?: string;
+              additionalDataDe124?: string;
             };
           };
         }[];

@@ -1,7 +1,8 @@
 const path = require('path');
 
 module.exports = {
-    "packagerConfig": {},
+    "packagerConfig": {
+    },
     "makers": [
       {
         "name": "@electron-forge/maker-squirrel",

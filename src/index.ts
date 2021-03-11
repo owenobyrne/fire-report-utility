@@ -7,6 +7,7 @@ import OpenAPIClientAxios from 'openapi-client-axios';
 import CreateCsvFile from './csv-format';
 import Store from 'electron-store';
 import updater from 'update-electron-app';
+import isDev from 'electron-is-dev';
 
 updater();
 
@@ -59,7 +60,7 @@ const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (isDev) { mainWindow.webContents.openDevTools(); }
 };
 
 // This method will be called when Electron has finished
@@ -87,10 +88,9 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-const api = new OpenAPIClientAxios({ definition: 'fire-business-api-v1.yml' });
+const api = new OpenAPIClientAxios({ definition: path.join(__dirname, "static/fire-business-api-v1.yml") });
 
 ipcMain.on("page-contents-loaded", function (event, arg) {
-  console.log("I'm told the page is loaded");
   
   var apiToken : Configuration = {
     clientId: store.get('clientId'),
@@ -98,7 +98,8 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
     refreshToken: store.get('refreshToken')
   };
  
-  console.log(store.store);
+  if (isDev) { console.log(store.store); }
+
   mainWindow.webContents.send("configs", apiToken); 
   api.init<FireBusinessApiClient>().then((c : FireBusinessApiClient) => { client = c; });
   
@@ -107,15 +108,12 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
 var transactions:Components.Schemas.Transaction[] = [];
 
 let getTransactions = function(fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
-  // need to manually edit the type file to allow limit and offset. (Components.Parameters.LimitParam & Components.Parameters.OffsetParam & )
   client.getTransactionsFilteredById(
     {ican: 2150, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
     null, 
     { headers: { "Authorization": "Bearer " + accessToken }}
   ).then(res => {
     var total = res.data.total;
-
-    console.log(JSON.stringify(res.data.transactions));
     
     transactions.push(...res.data.transactions);
 
@@ -144,6 +142,9 @@ ipcMain.on("save-configuration", function (event, arg) {
 
 //ipcMain.on will receive the “btnclick” info from renderprocess 
 ipcMain.on("run-report", function (event, arg) {
+  // blank the array each time
+  transactions = [];
+
   var fromDate = new Date(arg.fromDate + 'T00:00:00').getTime();
   var toDate = new Date(arg.toDate + 'T23:59:59').getTime();
 
@@ -163,8 +164,6 @@ ipcMain.on("run-report", function (event, arg) {
             title: "Save Report As...", 
             defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace("-", ".")+"-"+arg.toDate.replace("-", ".")+".csv")
           });
-
-          console.log(savePath);
 
           if (savePath != undefined) {
             // save this directory as the default going foward

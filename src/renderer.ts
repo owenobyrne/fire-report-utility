@@ -23,7 +23,6 @@ let getISODate = function(date: Date) {
 }
 
 function pageLoaded(){
-    console.log("Page has loaded");
 
     $('#settings').accordion();
 
@@ -41,12 +40,7 @@ function pageLoaded(){
         }
     })
 
-    $('#progressbar').progress({
-        text: {
-          active  : 'Retrieved {value} of {total} transactions...',
-          success : '{total} Transactions Retrieved.'
-        }
-      });
+    $('#progressbar').progress();
 
     $('.ui.dropdown').dropdown();
 
@@ -57,7 +51,8 @@ $("#runreport").on('click', function (event : any) {
     event.preventDefault(); 
     var selectedAccount =  $('.ui.dropdown').dropdown("get value");
 
-   $("#runreport").addClass("loading");
+    $('#progressbar').progress("reset");
+    $("#runreport").addClass("loading");
     window.api.send("run-report", { ican: selectedAccount, fromDate: getISODate($("#fromDate").calendar("get date")), toDate: getISODate($("#toDate").calendar("get date")) } ); 
 });
 
@@ -70,11 +65,10 @@ $("#saveconfiguration").on('click', function (event : any) {
 window.api.receive("configuration-saved", function(result : any) {
     $("#saveconfiguration").removeClass("loading");
     $('#settings').accordion("close", 0);
+    window.api.send('get-accounts');
 });
 
 window.api.receive("configs", function(configs : Configuration) {
-    console.log(configs);
-    
     $("#clientId").val(configs.clientId);
     $("#clientKey").val(configs.clientKey);
     $("#refreshToken").val(configs.refreshToken);             
@@ -92,10 +86,12 @@ window.api.receive("progress-update", function(param : any) {
     
     $("#progressbar")
         .progress("set total", param.total)
-        .progress("set progress", param.progress);
+        .progress("set progress", param.progress)
+        .progress("set label", `Retrieved ${param.progress} of ${param.total} transactions...`);
 
     if (param.progress == param.total) {
         $("#runreport").removeClass("loading");
+        $("#progressbar").progress("set label", `${param.total} Transactions Retrieved.`);
     }
 });
 

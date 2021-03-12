@@ -8,6 +8,13 @@ import CreateCsvFile from './csv-format';
 import Store from 'electron-store';
 import updater from 'update-electron-app';
 import isDev from 'electron-is-dev';
+import Bugsnag from '@bugsnag/js'
+import { version } from './../package.json';
+
+Bugsnag.start({
+  apiKey: '1019927431ee232b19a6834177aa5273',
+  appVersion: version
+})
 
 updater();
 
@@ -44,8 +51,8 @@ const createWindow = (): void => {
   // Create the browser window.
 
   mainWindow = new BrowserWindow({
-    height: 1200,
-    width: 1600,
+    height: 600,
+    width: 400,
     webPreferences: {
       nodeIntegration: false, // is default value after Electron v5
       // In a sandbox
@@ -62,6 +69,8 @@ const createWindow = (): void => {
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
+  Bugsnag.notify("Loaded");
+  
   // Open the DevTools.
   if (isDev) { mainWindow.webContents.openDevTools(); }
 };
@@ -145,7 +154,6 @@ let getTransactions = function(ican: number, fromDate: number, toDate: number, l
   ).then(res => {
     var total = res.data.total;
     
-    console.log(JSON.stringify(res.data.transactions));
     transactions.push(...res.data.transactions);
 
     mainWindow.webContents.send("progress-update", { total: res.data.total, progress: (offset + limit > total ? total : offset + limit) }); 

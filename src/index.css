@@ -4,3 +4,11 @@ body {
   max-width: 38rem;
   padding: 2rem;
 }
+
+h1#apptitle {
+  background-image: url(https://www.fire.com/wp-content/uploads/2018/12/fire-logo.svg);
+  background-repeat: no-repeat;
+  background-position: 0px;
+  background-size: 50px;
+  padding-left: 60px;
+}

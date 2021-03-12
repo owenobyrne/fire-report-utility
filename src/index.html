@@ -2,14 +2,14 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Fire Report Utility</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.min.css">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;" />
   </head>
   <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
+    <h1 id="apptitle">&nbsp;</h1>
+    <p><strong>Download Account CSV reports.</strong></p>
 
     <div id="settings" class="ui styled accordion">
       <div class="title">
@@ -50,8 +50,6 @@
             <i class="dropdown icon"></i>
             <div class="default text">Select Account...</div>
             <div id="#accountItems" class="menu">
-              <div class="item" data-value="male">Male</div>
-              <div class="item" data-value="female">Female</div>
             </div>
           </div>
         </div>

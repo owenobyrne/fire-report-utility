@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const { BugsnagSourceMapUploaderPlugin, BugsnagBuildReporterPlugin  } = require('webpack-bugsnag-plugins')
+const version = require('./package.json').version;
 
 module.exports = {
   mode: 'production',
@@ -41,6 +43,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html'
+    }),
+    new BugsnagSourceMapUploaderPlugin({
+      apiKey: '1019927431ee232b19a6834177aa5273',
+      appVersion: version
+    }),
+    new BugsnagBuildReporterPlugin({
+      apiKey: '1019927431ee232b19a6834177aa5273',
+      appVersion: version
     })
   ]
 };

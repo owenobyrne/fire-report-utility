@@ -1,7 +1,7 @@
 {
   "name": "fire-report-utility",
   "productName": "Fire Report Utility",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Utility Application to download Fire CSV Reports",
   "main": ".webpack/main",
   "scripts": {

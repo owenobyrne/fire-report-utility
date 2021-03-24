@@ -375,7 +375,7 @@ var getSafeString = function(/*String*/ value:string) {
     /*
         * In order to protect us against CSV injections it is recommended that the following characters be prepended with a single quote
         */
-    if (startsWith(value, "=") || startsWith(value, "+") || startsWith(value, "@") || startsWith(value, "-")) {
+    if (startsWith(value, "=") || startsWith(value, "+") || startsWith(value, "@")) {
         value = '\'' + value;
     } 
     

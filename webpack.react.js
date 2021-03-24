@@ -38,7 +38,7 @@ module.exports = {
   },
   output: {
     path: __dirname + '/dist',
-    filename: 'renderer.js'
+    filename: 'renderer.js',
   },
   plugins: [
     new HtmlWebpackPlugin({

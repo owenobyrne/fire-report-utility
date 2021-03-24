@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, Menu, BrowserWindow, ipcMain, dialog } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { Client as FireBusinessApiClient, Components, Paths } from './types/fire-business-api';
@@ -37,8 +37,9 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 let accessToken :string = "";
+let accessTokenExpiryDate: Date;
 let mainWindow : BrowserWindow;
-let client : FireBusinessApiClient;
+let _fireBusinessApiClient : FireBusinessApiClient;
 let accounts : Components.Schemas.Account[] = [];
 let transactions:Components.Schemas.Transaction[] = [];
 
@@ -75,6 +76,8 @@ const createWindow = (): void => {
   if (isDev) { mainWindow.webContents.openDevTools(); }
 };
 
+Menu.setApplicationMenu(null);
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -104,32 +107,67 @@ var initialiseApiClient = function() {
   return api.init<FireBusinessApiClient>();
 }
 
-var getAccessToken = function() {
-  var nonce = Math.floor(new Date().getTime()/1000.0);
-  var clientSecret = sha256(nonce + store.get('clientKey'));
-
-  return client.authenticate(null, {clientId: store.get('clientId'), clientSecret:  clientSecret, refreshToken: store.get('refreshToken'), nonce: nonce, grantType: "AccessToken"});
-};
-
-var loadAccounts = function() {
+var loadAccounts = function(client: FireBusinessApiClient) {
   return client.getAccounts(null, null,  { headers: { "Authorization": "Bearer " + accessToken }});
 }
 
 
 const api = new OpenAPIClientAxios({ definition: path.join(__dirname, "static/fire-business-api-v1.yml") });
 
-if (store.get("clientId").length == 36) {
-  initialiseApiClient().then((c : FireBusinessApiClient) => { 
-    console.log(c);
-    client = c;
+var getClient = function() {
+  console.log("Getting client....");
+  console.log(store.get("clientId"));
 
-    getAccessToken().then(gatres => { 
-      console.log(gatres);
-      accessToken = gatres.data.accessToken;
-    });
+  return new Promise<FireBusinessApiClient>((resolve, reject) => {
+    // do we have a client already?
+    if (_fireBusinessApiClient != null) {
+      // check the expiry on the accessToken
+      if (new Date() > accessTokenExpiryDate) {
+        getAccessToken(_fireBusinessApiClient).then(result => { 
+          resolve(_fireBusinessApiClient); 
+        });
 
+      }
+
+      resolve(_fireBusinessApiClient);
+
+    } else if (store.get("clientId").length == 36) {
+      // if we have client API tokens, initialise a new client.
+      initialiseApiClient().then((client : FireBusinessApiClient) => { 
+        // console.log(client);
+        _fireBusinessApiClient = client;
+        resolve(_fireBusinessApiClient);
+      });
+
+    } else {
+      // what we doing here dude?
+      reject(new Error("No Client available - have you set the API Token?"));
+    }
   });
 }
+
+var getAccessToken = function(client: FireBusinessApiClient) {
+  return new Promise<string>((resolve, reject) => {
+    var nonce = Math.floor(new Date().getTime()/1000.0);
+    var clientSecret = sha256(nonce + store.get('clientKey'));
+
+    client.authenticate(null, {clientId: store.get('clientId'), clientSecret:  clientSecret, refreshToken: store.get('refreshToken'), nonce: nonce, grantType: "AccessToken"}).then(gatres => { 
+      // console.log(gatres);
+      accessToken = gatres.data.accessToken;
+      accessTokenExpiryDate = new Date(gatres.data.expiry);
+      resolve("ok");
+    });
+  });
+}
+
+// try to initialise a new client - don't worry if we don't have API tokens. 
+getClient()
+  .then(client => { 
+    getAccessToken(client).then(result => {});
+  }).catch(err => {
+    // no problems here. 
+  });
+
 
 ipcMain.on("page-contents-loaded", function (event, arg) {
   
@@ -147,43 +185,56 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
 
 
 let getTransactions = function(ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
-  client.getTransactionsFilteredById(
-    {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
-    null, 
-    { headers: { "Authorization": "Bearer " + accessToken }}
-  ).then(res => {
-    var total = res.data.total;
+  getClient()
+    .then(client => {
+
+    client.getTransactionsFilteredById(
+      {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
+      null, 
+      { headers: { "Authorization": "Bearer " + accessToken }}
+    ).then(res => {
+      var total = res.data.total;
+      
+      transactions.push(...res.data.transactions);
+
+      mainWindow.webContents.send("progress-update", { total: res.data.total, progress: (offset + limit > total ? total : offset + limit) }); 
     
-    transactions.push(...res.data.transactions);
-
-    mainWindow.webContents.send("progress-update", { total: res.data.total, progress: (offset + limit > total ? total : offset + limit) }); 
-  
-    if (offset + limit < total) {
-      getTransactions(ican, fromDate, toDate, limit, offset + limit, callback);
-    } else {
-      var csv = CreateCsvFile.generate(transactions, true, "filename.csv");
-      callback(csv);
-    }
+      if (offset + limit < total) {
+        getTransactions(ican, fromDate, toDate, limit, offset + limit, callback);
+      } else {
+        var csv = CreateCsvFile.generate(transactions, true, "filename.csv");
+        callback(csv);
+      }
 
 
+    });
+  })
+  .catch(err => {
+    // notify the UI
   });
 }
 
 ipcMain.on("get-accounts", function (event, arg) {
-  loadAccounts().then((res) => {
-    console.log(typeof res.data);
+  getClient()
+    .then(client => {
+    loadAccounts(client).then((res) => {
+      console.log(typeof res.data);
 
-    if ((res.data as Paths.GetAccounts.Responses.$200).accounts) {
-      accounts = (res.data as Paths.GetAccounts.Responses.$200).accounts;
-      mainWindow.webContents.send("accounts", accounts, store.get("selectedAccount"));   
+      if ((res.data as Paths.GetAccounts.Responses.$200).accounts) {
+        accounts = (res.data as Paths.GetAccounts.Responses.$200).accounts;
+        mainWindow.webContents.send("accounts", accounts, store.get("selectedAccount"));   
 
-    } 
-   
-  }).catch((err) => {
-      // error
-      console.error(err);
+      } 
     
+    }).catch((err) => {
+        // error
+        console.error(err);
+      
+    });
   })
+  .catch(err => {
+    // notify the UI
+  });
 });
 
 
@@ -195,7 +246,17 @@ ipcMain.on("save-configuration", function (event, arg) {
     clientKey: configs.clientKey,
     refreshToken: configs.refreshToken
   });
-  mainWindow.webContents.send("configuration-saved", true);
+
+  getClient()
+    .then(client => { 
+      getAccessToken(client).then(result => {
+        mainWindow.webContents.send("configuration-saved", true);
+      });
+    })
+    .catch(err => {
+      // notify the UI
+    });
+
 });
 
 //ipcMain.on will receive the “btnclick” info from renderprocess 

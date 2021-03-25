@@ -1,4 +1,4 @@
-import { app, Menu, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, Menu, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { Client as FireBusinessApiClient, Components, Paths } from './types/fire-business-api';
@@ -179,7 +179,7 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
  
   if (isDev) { console.log(JSON.stringify(store.store)); }
 
-  mainWindow.webContents.send("configs", apiToken);   
+  mainWindow.webContents.send("configs", version, apiToken);   
 });
 
 
@@ -276,19 +276,25 @@ ipcMain.on("run-report", function (event, arg) {
     fs.writeFileSync(path.join(app.getPath("userData"), "report.csv"), csv);
     var savePath:string = dialog.showSaveDialogSync({ 
       title: "Save Report As...", 
-      defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace("-", ".")+"-"+arg.toDate.replace("-", ".")+".csv")
+      defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv")
     });
 
     if (savePath != undefined) {
       // save this directory as the default going foward
       store.set("savePath", path.dirname(savePath));
 
-      fs.copyFileSync(
-        path.join(app.getPath("userData"), "report.csv"), 
-        savePath
-      );
+      try {
+        fs.copyFileSync(
+          path.join(app.getPath("userData"), "report.csv"), 
+          savePath
+        );
+      } catch (err) {
+        console.log(err);
+      }
 
       fs.rmSync(path.join(app.getPath("userData"), "report.csv"));
+
+      shell.showItemInFolder(savePath);
     }
 
   });

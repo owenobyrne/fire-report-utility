@@ -12,3 +12,9 @@ h1#apptitle {
   background-size: 50px;
   padding-left: 60px;
 }
+
+.app-info {
+  color: #cccccc;
+  font-size: 0.7rem;
+  padding-top: 1rem;
+}

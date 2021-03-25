@@ -68,10 +68,12 @@ window.api.receive("configuration-saved", function(result : any) {
     window.api.send('get-accounts');
 });
 
-window.api.receive("configs", function(configs : Configuration) {
+window.api.receive("configs", function(version: string, configs : Configuration) {
     $("#clientId").val(configs.clientId);
     $("#clientKey").val(configs.clientKey);
-    $("#refreshToken").val(configs.refreshToken);             
+    $("#refreshToken").val(configs.refreshToken); 
+    
+    $("#app-version").text(version);
 
     if (configs.clientId.length != 36) {
         $('#settings').accordion("open", 0);

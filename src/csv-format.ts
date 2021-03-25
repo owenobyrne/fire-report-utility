@@ -273,7 +273,7 @@ var getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
             }
             formattedTxn.relatedParty.card = {};
             formattedTxn.relatedParty.card.cardType = card.provider;
-            formattedTxn.relatedParty.card.cardLastFourDigits = card.maskedPan;
+            formattedTxn.relatedParty.card.cardLastFourDigits = card.maskedPan ? card.maskedPan.substr(card.maskedPan.length - 4) : "";
             
             formattedTxn.currency = txn.currency.code
 
@@ -409,8 +409,8 @@ export default class CreateCsvFile {
                 * Header hard coded to avoid an empty file
                 * This headers need to be in sync with com.carapay.common.model.outgoing.BusinessTransaction
                 */
-            csv = 'date,txnId,refId,ican,type,relatedParty.type,relatedParty.user.alias,relatedParty.user.mobilePhoneNumber,relatedParty.user.imageUrl,' +
-                    'relatedParty.user.connectionId,relatedParty.business.alias,relatedParty.account.id,relatedParty.account.alias,relatedParty.account.nsc,' +
+            csv = 'date,txnId,refId,ican,type,relatedParty.type,relatedParty.account.id,relatedParty.user.alias,relatedParty.user.mobilePhoneNumber,relatedParty.user.imageUrl,' +
+                    'relatedParty.user.connectionId,relatedParty.business.alias,relatedParty.account.alias,relatedParty.account.nsc,' +
                     'relatedParty.account.accountNumber,relatedParty.account.bic,relatedParty.account.iban,relatedParty.card.cardType,relatedParty.card.cardLastFourDigits,' +
                     'currency,feeAmount,taxAmount,amountAfterCharges,amountBeforeCharges,balance,myRef,dateAcknowledged,fxTradeDetails.buyCurrency,fxTradeDetails.sellCurrency,' +
                     'fxTradeDetails.fixedSide,fxTradeDetails.buyAmount,fxTradeDetails.sellAmount,fxTradeDetails.rate4d';

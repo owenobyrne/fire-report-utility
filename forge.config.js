@@ -67,7 +67,7 @@ module.exports = {
           owner: 'owenobyrne',
           name: 'fire-report-utility'
         },
-        prerelease: true
+        prerelease: false
       }
     }
 	]

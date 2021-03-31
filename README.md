@@ -16,6 +16,7 @@ typegen ./static/fire-business-api-v1-resolved.yml > ./src/types/fire-business-a
 
 To publish a new version, up the package.json version and run:
 ```bash
+export GITHUB_TOKEN=xxx
 npm run publish
 ```
 

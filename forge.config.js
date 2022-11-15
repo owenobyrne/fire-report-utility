@@ -11,12 +11,9 @@ module.exports = {
           return {
             name: 'fire-report-utility',
             authors: 'Owen O Byrne',
-            // exe: 'fire-report-downloader.exe',
             title: "Fire Report Utility",
             noMsi: true,
             remoteReleases: '',
-            // setupExe: `fire-report-downloader-setup-${arch}.exe`,
-            // setupIcon: path.resolve(__dirname, 'fire-reports-icon.png'),
             iconUrl: "https://owenobyrne.s3-eu-west-1.amazonaws.com/fire-reports-icon.png",
             certificateFile: path.resolve(__dirname, '../codesigning.pfx'),
             certificatePassword: ""
@@ -24,24 +21,21 @@ module.exports = {
         }
       },
       {
-        "name": "@electron-forge/maker-zip",
-        "platforms": [
-          "darwin"
-        ]
-      },
-      {
-        "name": "@electron-forge/maker-deb",
-        "config": {}
-      },
-      {
-        "name": "@electron-forge/maker-rpm",
-        "config": {}
+        "name": '@electron-forge/maker-dmg',
+        "platforms": ['darwin'],
+        "config": (arch) => {
+          return {
+            name: 'fire-report-utility',
+            icon: "fire-reports-icon.png",
+            format: 'ULFO'
+          }
+        }
       }
     ],
     "plugins": [
-      [
-        "@electron-forge/plugin-webpack",
-        {
+      {
+        "name": "@electron-forge/plugin-webpack",
+        "config": {
           "mainConfig": "./webpack.main.config.js",
           "devContentSecurityPolicy": "default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' 'unsafe-inline' data: https://cdn.jsdelivr.net; connect-src ws://localhost:3000; child-src 'self'",
           "renderer": {
@@ -58,7 +52,7 @@ module.exports = {
             ]
           }
         }
-      ]
+      }
     ],
 	publishers: [
 		{

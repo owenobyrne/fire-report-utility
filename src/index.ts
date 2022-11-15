@@ -36,7 +36,7 @@ const store = new Store({
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-let accessToken :string = "";
+let accessToken = "";
 let accessTokenExpiryDate: Date;
 let mainWindow : BrowserWindow;
 let _fireBusinessApiClient : FireBusinessApiClient;
@@ -103,18 +103,18 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-var initialiseApiClient = function() {
+const initialiseApiClient = function() {
   return api.init<FireBusinessApiClient>();
 }
 
-var loadAccounts = function(client: FireBusinessApiClient) {
+const loadAccounts = function(client: FireBusinessApiClient) {
   return client.getAccounts(null, null,  { headers: { "Authorization": "Bearer " + accessToken }});
 }
 
 
 const api = new OpenAPIClientAxios({ definition: path.join(__dirname, "static/fire-business-api-v1.yml") });
 
-var getClient = function() {
+const getClient = function() {
   console.log("Getting client....");
   console.log(store.get("clientId"));
 
@@ -146,10 +146,10 @@ var getClient = function() {
   });
 }
 
-var getAccessToken = function(client: FireBusinessApiClient) {
+const getAccessToken = function(client: FireBusinessApiClient) {
   return new Promise<string>((resolve, reject) => {
-    var nonce = Math.floor(new Date().getTime()/1000.0);
-    var clientSecret = sha256(nonce + store.get('clientKey'));
+    const nonce = Math.floor(new Date().getTime()/1000.0);
+    const clientSecret = sha256(nonce + store.get('clientKey'));
 
     client.authenticate(null, {clientId: store.get('clientId'), clientSecret:  clientSecret, refreshToken: store.get('refreshToken'), nonce: nonce, grantType: "AccessToken"}).then(gatres => { 
       // console.log(gatres);
@@ -171,7 +171,7 @@ getClient()
 
 ipcMain.on("page-contents-loaded", function (event, arg) {
   
-  var apiToken : Configuration = {
+  const apiToken : Configuration = {
     clientId: store.get('clientId'),
     clientKey: store.get('clientKey'),
     refreshToken: store.get('refreshToken')
@@ -184,7 +184,7 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
 
 
 
-let getTransactions = function(ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
+const getTransactions = function(ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
   getClient()
     .then(client => {
 
@@ -193,7 +193,7 @@ let getTransactions = function(ican: number, fromDate: number, toDate: number, l
       null, 
       { headers: { "Authorization": "Bearer " + accessToken }}
     ).then(res => {
-      var total = res.data.total;
+      const total = res.data.total;
       
       transactions.push(...res.data.transactions);
 
@@ -202,7 +202,7 @@ let getTransactions = function(ican: number, fromDate: number, toDate: number, l
       if (offset + limit < total) {
         getTransactions(ican, fromDate, toDate, limit, offset + limit, callback);
       } else {
-        var csv = CreateCsvFile.generate(transactions, true, "filename.csv");
+        const csv = CreateCsvFile.generate(transactions, true, "filename.csv");
         callback(csv);
       }
 
@@ -240,7 +240,7 @@ ipcMain.on("get-accounts", function (event, arg) {
 
 
 ipcMain.on("save-configuration", function (event, arg) {
-  let configs : Configuration = arg.configs;
+  const configs : Configuration = arg.configs;
   store.set({
     clientId: configs.clientId,
     clientKey: configs.clientKey,
@@ -266,15 +266,15 @@ ipcMain.on("run-report", function (event, arg) {
 
   store.set("selectedAccount", arg.ican);
 
-  var fromDate = new Date(arg.fromDate + 'T00:00:00').getTime();
-  var toDate = new Date(arg.toDate + 'T23:59:59').getTime();
+  const fromDate = new Date(arg.fromDate + 'T00:00:00').getTime();
+  const toDate = new Date(arg.toDate + 'T23:59:59').getTime();
   
-  var offset = 0;
-  var limit = 50;
+  const offset = 0;
+  const limit = 50;
 
   getTransactions(arg.ican, fromDate, toDate, limit, offset, function(csv : string) {
     fs.writeFileSync(path.join(app.getPath("userData"), "report.csv"), csv);
-    var savePath:string = dialog.showSaveDialogSync({ 
+    const savePath:string = dialog.showSaveDialogSync({ 
       title: "Save Report As...", 
       defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv")
     });

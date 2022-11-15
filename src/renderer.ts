@@ -2,7 +2,7 @@ import './index.css';
 import { Components } from './types/fire-business-api'; 
 
 // typescript gets very snarky when there's no type definitions for things, 
-// and getting jquery-ui or semantic-ui to work as a bitch.
+// and getting jquery-ui or semantic-ui to work was a bitch.
 // so tell it not to worry about $ (just shut the fuck up about it!!)
 // side effect of no longer offering code completion
 declare var $ : any;

@@ -1,7 +1,12 @@
 const path = require('path');
 
-module.exports = {
+const config = {
     "packagerConfig": {
+      "osxSign": {
+        "identity": "Developer ID Application: Owen O Byrne (54A3A3X8RX)",
+        'gatekeeper-assess': false,
+        "signature-flags": "library"
+      }
     },
     "makers": [
       {
@@ -23,12 +28,13 @@ module.exports = {
       {
         "name": '@electron-forge/maker-dmg',
         "platforms": ['darwin'],
-        "config": (arch) => {
-          return {
+        "config": { 
             name: 'fire-report-utility',
-            icon: "fire-reports-icon.png",
-            format: 'ULFO'
-          }
+            icon: "assets/MacOS_Icon.icns",
+            background: "assets/DMG_Background.tiff",
+            debug: true,
+            format: 'ULFO',
+            additionalDMGOptions: {}
         }
       }
     ],
@@ -67,3 +73,30 @@ module.exports = {
     }
 	]
 };
+
+
+// if we're on a Mac, add the notarise stuff.
+function notarizeMaybe() {
+  if (process.platform !== 'darwin') {
+    return;
+  }
+
+
+  if (!process.env.APPLE_ID || !process.env.APPLE_ID_PASSWORD) {
+    console.warn(
+      'Should be notarizing, but environment variables APPLE_ID or APPLE_ID_PASSWORD are missing!',
+    );
+    // return;
+  }
+
+  config.packagerConfig.osxNotarize = {
+    appBundleId: 'com.fire.report-utility',
+    appleId: process.env.APPLE_ID || "owen.obyrne@iol.ie",
+    appleIdPassword: process.env.APPLE_ID_PASSWORD || "tgdw-ngiy-dzon-piho",
+  };
+}
+
+notarizeMaybe();
+
+// Finally, export it
+module.exports = config;

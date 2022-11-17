@@ -17,79 +17,79 @@ enum Direction {
     OUT
 };
 
-var transactionTypeNamesEn = {
+const transactionTypeNamesEn = {
     "view.transaction.payment_received" : "Fire Payment Received",
-"view.transaction.lodgement" : "Payment Received",
-"view.transaction.withdrawal" : "Bank Transfer",
-"view.transaction.internal_transfer_to" : "Transfer In",
-"view.transaction.internal_transfer_from" : "Transfer Out",
-"view.transaction.withdrawal_returned" : "Bank Transfer Returned",
-"view.transaction.lodgement_reversed" : "Payment Received Reversed",
-"view.transaction.fx_internal_transfer_from" : "FX Transfer Out",
-"view.transaction.fx_internal_transfer_to" : "FX Transfer In",
-"view.transaction.add_account" : "Add Account",
-"view.transaction.create_additional_user" : "New User Created",
-"view.transaction.reversal" : "Bank Transfer",
-"view.transaction.manual_transfer" : "Payment Received",
-"view.transaction.payment_sent" : "Fire Payment Sent",
-"view.transaction.pending_payment_sent" : "Pending Payment Sent",
-"view.transaction.payment_request_sent" : "Payment Request",
-"view.transaction.create_card" : "Created Debit Card",
+    "view.transaction.lodgement" : "Payment Received",
+    "view.transaction.withdrawal" : "Bank Transfer",
+    "view.transaction.internal_transfer_to" : "Transfer In",
+    "view.transaction.internal_transfer_from" : "Transfer Out",
+    "view.transaction.withdrawal_returned" : "Bank Transfer Returned",
+    "view.transaction.lodgement_reversed" : "Payment Received Reversed",
+    "view.transaction.fx_internal_transfer_from" : "FX Transfer Out",
+    "view.transaction.fx_internal_transfer_to" : "FX Transfer In",
+    "view.transaction.add_account" : "Add Account",
+    "view.transaction.create_additional_user" : "New User Created",
+    "view.transaction.reversal" : "Bank Transfer",
+    "view.transaction.manual_transfer" : "Payment Received",
+    "view.transaction.payment_sent" : "Fire Payment Sent",
+    "view.transaction.pending_payment_sent" : "Pending Payment Sent",
+    "view.transaction.payment_request_sent" : "Payment Request",
+    "view.transaction.create_card" : "Created Debit Card",
 
-"view.transaction.card_pos_contact_debit" : "Debit Card Payment",
-"view.transaction.card_pos_contact_credit" : "Debit Card Refund",
-"view.transaction.card_pos_contactless_debit" : "Contactless Payment",
-"view.transaction.card_pos_contactless_credit" : "Contactless Refund",
-"view.transaction.card_ecommerce_debit" : "Online Payment",
-"view.transaction.card_ecommerce_credit" : "Online Refund",
-"view.transaction.card_atm_debit" : "ATM Withdrawal",
-"view.transaction.card_atm_credit" : "ATM Lodgement",
+    "view.transaction.card_pos_contact_debit" : "Debit Card Payment",
+    "view.transaction.card_pos_contact_credit" : "Debit Card Refund",
+    "view.transaction.card_pos_contactless_debit" : "Contactless Payment",
+    "view.transaction.card_pos_contactless_credit" : "Contactless Refund",
+    "view.transaction.card_ecommerce_debit" : "Online Payment",
+    "view.transaction.card_ecommerce_credit" : "Online Refund",
+    "view.transaction.card_atm_debit" : "ATM Withdrawal",
+    "view.transaction.card_atm_credit" : "ATM Lodgement",
 
-"view.transaction.card_international_pos_contact_debit" : "Int Debit Card Payment",
-"view.transaction.card_international_pos_contact_credit" : "Int Debit Card Refund",
-"view.transaction.card_international_pos_contactless_debit" : "Int Contactless Payment",
-"view.transaction.card_international_pos_contactless_credit" : "Int Contactless Refund",
-"view.transaction.card_international_ecommerce_debit" : "Int Online Payment",
-"view.transaction.card_international_ecommerce_credit" : "Int Online Refund",
-"view.transaction.card_international_atm_debit" : "Int ATM Withdrawal",
-"view.transaction.card_international_atm_credit" : "Int ATM Lodgement",
+    "view.transaction.card_international_pos_contact_debit" : "Int Debit Card Payment",
+    "view.transaction.card_international_pos_contact_credit" : "Int Debit Card Refund",
+    "view.transaction.card_international_pos_contactless_debit" : "Int Contactless Payment",
+    "view.transaction.card_international_pos_contactless_credit" : "Int Contactless Refund",
+    "view.transaction.card_international_ecommerce_debit" : "Int Online Payment",
+    "view.transaction.card_international_ecommerce_credit" : "Int Online Refund",
+    "view.transaction.card_international_atm_debit" : "Int ATM Withdrawal",
+    "view.transaction.card_international_atm_credit" : "Int ATM Lodgement",
 
-"view.transaction.card_pos_contact_debit_reversal" : "Debit Card Payment (Reversal)",
-"view.transaction.card_pos_contact_credit_reversal" : "Debit Card Refund (Reversal)",
-"view.transaction.card_pos_contactless_debit_reversal" : "Contactless Payment (Reversal)",
-"view.transaction.card_pos_contactless_credit_reversal" : "Contactless Refund (Reversal)",
-"view.transaction.card_ecommerce_debit_reversal" : "Online Payment (Reversal)",
-"view.transaction.card_ecommerce_credit_reversal" : "Online Refund (Reversal)",
-"view.transaction.card_atm_debit_reversal" : "ATM Withdrawal (Reversal)",
-"view.transaction.card_atm_credit_reversal" : "ATM Lodgement (Reversal)",
+    "view.transaction.card_pos_contact_debit_reversal" : "Debit Card Payment (Reversal)",
+    "view.transaction.card_pos_contact_credit_reversal" : "Debit Card Refund (Reversal)",
+    "view.transaction.card_pos_contactless_debit_reversal" : "Contactless Payment (Reversal)",
+    "view.transaction.card_pos_contactless_credit_reversal" : "Contactless Refund (Reversal)",
+    "view.transaction.card_ecommerce_debit_reversal" : "Online Payment (Reversal)",
+    "view.transaction.card_ecommerce_credit_reversal" : "Online Refund (Reversal)",
+    "view.transaction.card_atm_debit_reversal" : "ATM Withdrawal (Reversal)",
+    "view.transaction.card_atm_credit_reversal" : "ATM Lodgement (Reversal)",
 
-"view.transaction.card_international_pos_contact_debit_reversal" : "Int Debit Card Payment (Reversal)",
-"view.transaction.card_international_pos_contact_credit_reversal" : "Int Debit Card Refund (Reversal)",
-"view.transaction.card_international_pos_contactless_debit_reversal" : "Int Contactless Payment (Reversal)",
-"view.transaction.card_international_pos_contactless_credit_reversal" : "Int Contactless Refund (Reversal)",
-"view.transaction.card_international_ecommerce_debit_reversal" : "Int Online Payment (Reversal)",
-"view.transaction.card_international_ecommerce_credit_reversal" : "Int Online Refund (Reversal)",
-"view.transaction.card_international_atm_debit_reversal" : "Int ATM Withdrawal (Reversal)",
-"view.transaction.card_international_atm_credit_reversal" : "Int ATM Lodgement (Reversal)",
+    "view.transaction.card_international_pos_contact_debit_reversal" : "Int Debit Card Payment (Reversal)",
+    "view.transaction.card_international_pos_contact_credit_reversal" : "Int Debit Card Refund (Reversal)",
+    "view.transaction.card_international_pos_contactless_debit_reversal" : "Int Contactless Payment (Reversal)",
+    "view.transaction.card_international_pos_contactless_credit_reversal" : "Int Contactless Refund (Reversal)",
+    "view.transaction.card_international_ecommerce_debit_reversal" : "Int Online Payment (Reversal)",
+    "view.transaction.card_international_ecommerce_credit_reversal" : "Int Online Refund (Reversal)",
+    "view.transaction.card_international_atm_debit_reversal" : "Int ATM Withdrawal (Reversal)",
+    "view.transaction.card_international_atm_credit_reversal" : "Int ATM Lodgement (Reversal)",
 
-"view.transaction.card_message_reversed_debit" : "Card Authorisation Reversed",
-"view.transaction.card_message_reversed_credit" : "Card Authorisation Reversed",
-"view.transaction.card_message_reversed.tooltip" : "A 'card authorisation reversed' transaction is created when the amount a card transaction was originally authorised for differs from the final settlement amount. This generally occurs in the case of international payments and is a result of FX rate changes.",
+    "view.transaction.card_message_reversed_debit" : "Card Authorisation Reversed",
+    "view.transaction.card_message_reversed_credit" : "Card Authorisation Reversed",
+    "view.transaction.card_message_reversed.tooltip" : "A 'card authorisation reversed' transaction is created when the amount a card transaction was originally authorised for differs from the final settlement amount. This generally occurs in the case of international payments and is a result of FX rate changes.",
 
-"view.transaction.direct_debit" : "Direct Debit",
-"view.transaction.direct_debit_represented" : "Direct Debit (Represented)",
-"view.transaction.direct_debit_refund" : "Direct Debit Refund",
+    "view.transaction.direct_debit" : "Direct Debit",
+    "view.transaction.direct_debit_represented" : "Direct Debit (Represented)",
+    "view.transaction.direct_debit_refund" : "Direct Debit Refund",
 
-"view.transaction.pis_lodgement" : "Fire Open Payment",
+    "view.transaction.pis_lodgement" : "Fire Open Payment",
 };
 
 
-var txnTypes:any[] = [];
-var moneyOutTxnTypes:string[] = [];
-var inTxnTypes:string[] = [];
-var visibleTxnTypes:string[] = [];
-var cardTxnTypes:string[] = [];
-var feeTxnTypes:string[] = [];
+let txnTypes:any[] = [];
+let moneyOutTxnTypes:string[] = [];
+let inTxnTypes:string[] = [];
+let visibleTxnTypes:string[] = [];
+let cardTxnTypes:string[] = [];
+let feeTxnTypes:string[] = [];
 
 
 txnTypes.push({name: transactionTypeNamesEn["view.transaction.payment_received"], type: "PAYMENT_RECEIVED",                                    display: true,  ticked: false, direction: Direction.IN,  group: Group.FIRE_PAYMENT,     ofxType: "CREDIT"});
@@ -184,8 +184,8 @@ txnTypes.forEach(function(value: any, index: number) {
 });
 
 
-var getByType = function(type: string) : any {
-    var foundType = null;
+const getByType = function(type: string) : any {
+    let foundType = null;
     txnTypes.forEach(function(item: any, index: number) {
         if(item.type === type) {
             foundType = item;
@@ -200,7 +200,7 @@ var getByType = function(type: string) : any {
  * @param type e.g. FX_INTERNAL_TRANSFER_FROM
  * @return Object or null
  */
-var getType = function(/*String*/ type: string): any {
+ const getType = function(/*String*/ type: string): any {
     
     var item = txnTypes.find(function(current: any) {
         return current.type === type;
@@ -210,7 +210,7 @@ var getType = function(/*String*/ type: string): any {
 };
 
 
-var getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
+const getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
     
     /* Each txn can have a different object structure (different relatedParty for example and different names on things),
         *  we need to standardise the object so that it will go into CSV and so it will be nicely ordered */
@@ -319,7 +319,7 @@ var getFormattedTxns = function(txns: Components.Schemas.Transaction[]) {
  * In the vast majority of cases we just need to just negate the value but there's an edge case where a money out txn type
  * has a negative amount associated with it due to some brexit migrated accounts that had a negative balance.
  */
-var formatMoneyOutTransactionAmount = function(/*number*/ amount: number) {
+ const formatMoneyOutTransactionAmount = function(/*number*/ amount: number) {
 
     if (amount >= 0) {
         // it's a normal money out transaction such as a withdrawal, we just need to negate the value
@@ -331,7 +331,7 @@ var formatMoneyOutTransactionAmount = function(/*number*/ amount: number) {
     }
 };
 
-var flattenJson = function(data:any) {
+const flattenJson = function(data:any) {
 
     var result:any = {};
     function recurse(cur:any, prop:string) {
@@ -360,7 +360,7 @@ var flattenJson = function(data:any) {
     return result;
 };
 
-var startsWith = function(/*String*/ str:string, /*String*/ subStr:string) {
+const startsWith = function(/*String*/ str:string, /*String*/ subStr:string) {
     return str.substring(0, subStr.length) === subStr;
 };
 
@@ -370,7 +370,7 @@ var startsWith = function(/*String*/ str:string, /*String*/ subStr:string) {
  * 
  * MUST BE IN SYNC WITH CsvMessageConverter.java
  */
-var getSafeString = function(/*String*/ value:string) {
+ const getSafeString = function(/*String*/ value:string) {
     
     /*
         * In order to protect us against CSV injections it is recommended that the following characters be prepended with a single quote

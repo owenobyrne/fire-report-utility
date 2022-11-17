@@ -34,15 +34,12 @@ Create a new Developer ID Application Certificate - it needs to be a Developer I
 
 Use this full certificate name in the `"identity"` field of the `forge.config.js` file - `config.packagerConfig.osxSign`. When you run the package step, it will ask you for your Keychain password to access the key. It needs the key about 15 times, so best to Allow Always. 
 
-You must also Notarize the app - this is a process where Apple verifies the code in an automated fashion. It takes about 5 minutes during the package process. 
-
-You need to provide your Apple ID email and a password. You probably have (should have!) 2FA on your Apple ID, so you must create an App Specific Password for this.
+You must also Notarize the app - this is a process where Apple reviews the code in an automated fashion. https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution. It takes about 5 minutes during the package process. You need to provide your Apple ID email and a password. You probably have (should have!) 2FA on your Apple ID, so you must create an App Specific Password for this.
 
 - Sign in to https://appleid.apple.com.
 - In the Sign-In and Security section, select App-Specific Passwords.
 - Select Generate an app-specific password or select the Add button Blue plus sign icon, then follow the steps on your screen.
 - Use this password in the `config.packagerConfig.osxNotarize` section of `forge.config.js`
-
 
 # Make executable
 

@@ -85,7 +85,13 @@ const template = [{
     ]}
 ];
 
-Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+if (process.platform == 'darwin') {
+  // MacOS needs to have the copy/paste menu items, otherwise Cmd-C/Cmd-V don't work. 
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+} else {
+  Menu.setApplicationMenu(null);
+}
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

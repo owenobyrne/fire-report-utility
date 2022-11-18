@@ -78,10 +78,12 @@ const createWindow = (): void => {
 
 // Create the Application's main menu
 const template = [{
-  label: "Edit",
+  label: "Fire Report Utility",
   submenu: [
       { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
       { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+      { type: "separator" },
+      { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
     ]}
 ];
 

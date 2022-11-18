@@ -76,7 +76,16 @@ const createWindow = (): void => {
   if (isDev) { mainWindow.webContents.openDevTools(); }
 };
 
-Menu.setApplicationMenu(null);
+// Create the Application's main menu
+const template = [{
+  label: "Edit",
+  submenu: [
+      { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+      { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+    ]}
+];
+
+Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -40,8 +40,9 @@ let accessToken = "";
 let accessTokenExpiryDate: Date;
 let mainWindow : BrowserWindow;
 let _fireBusinessApiClient : FireBusinessApiClient;
-let accounts : Components.Schemas.Account[] = [];
-let transactions:Components.Schemas.Transaction[] = [];
+let mAccounts : Components.Schemas.Account[] = [];
+let mCopyOfAccounts : Components.Schemas.Account[] = [];
+let mTransactions:Components.Schemas.Transaction[] = [];
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -201,35 +202,7 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
 
 
 
-const getTransactions = function(ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
-  getClient()
-    .then(client => {
 
-    client.getTransactionsFilteredById(
-      {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
-      null, 
-      { headers: { "Authorization": "Bearer " + accessToken }}
-    ).then(res => {
-      const total = res.data.total;
-      
-      transactions.push(...res.data.transactions);
-
-      mainWindow.webContents.send("progress-update", { total: res.data.total, progress: (offset + limit > total ? total : offset + limit) }); 
-    
-      if (offset + limit < total) {
-        getTransactions(ican, fromDate, toDate, limit, offset + limit, callback);
-      } else {
-        const csv = CreateCsvFile.generate(transactions, true, "filename.csv");
-        callback(csv);
-      }
-
-
-    });
-  })
-  .catch(err => {
-    // notify the UI
-  });
-}
 
 ipcMain.on("get-accounts", function (event, arg) {
   getClient()
@@ -238,8 +211,8 @@ ipcMain.on("get-accounts", function (event, arg) {
       console.log(typeof res.data);
 
       if ((res.data as Paths.GetAccounts.Responses.$200).accounts) {
-        accounts = (res.data as Paths.GetAccounts.Responses.$200).accounts;
-        mainWindow.webContents.send("accounts", accounts, store.get("selectedAccount"));   
+        mAccounts = (res.data as Paths.GetAccounts.Responses.$200).accounts;
+        mainWindow.webContents.send("accounts", mAccounts, store.get("selectedAccount"));   
 
       } 
     
@@ -276,45 +249,105 @@ ipcMain.on("save-configuration", function (event, arg) {
 
 });
 
+const getTransactions = function(client: FireBusinessApiClient, ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
+  
+  client.getTransactionsFilteredById(
+    {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
+    null, 
+    { headers: { "Authorization": "Bearer " + accessToken }}
+  ).then(res => {
+    let total = res.data.total;
+
+    // this mTransacions is building up across all accounts, not being blanked between each one.
+    mTransactions.push(...res.data.transactions);
+
+    mainWindow.webContents.send("progress-update", { total: res.data.total, progress: (offset + limit > total ? total : offset + limit) }); 
+  
+    if (offset + limit < total) {
+      getTransactions(client, ican, fromDate, toDate, limit, offset + limit, callback);
+    } else {
+
+      let csv:string = CreateCsvFile.generate(mTransactions, true, "filename.csv");
+      callback(csv);
+    }
+
+
+  });
+
+}
+
+const saveFile = function(csv : string, filename: string) {
+  fs.writeFileSync(path.join(app.getPath("userData"), "report.csv"), csv);
+  const savePath:string = dialog.showSaveDialogSync({ 
+    title: "Save Report As...", 
+    defaultPath: path.join(store.get('savePath'), filename)
+  });
+
+  if (savePath != undefined) {
+    // save this directory as the default going foward
+    store.set("savePath", path.dirname(savePath));
+
+    try {
+      fs.copyFileSync(
+        path.join(app.getPath("userData"), "report.csv"), 
+        savePath
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    fs.rmSync(path.join(app.getPath("userData"), "report.csv"));
+
+    shell.showItemInFolder(savePath);
+  }
+
+}
+
+const getTransactionsForAllAccounts = function(client:FireBusinessApiClient, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) { 
+
+  let thisAccount: Components.Schemas.Account = mCopyOfAccounts.shift();
+  getTransactions(client, thisAccount.ican, fromDate, toDate, limit, offset, function(csv: string) {
+
+    if (mCopyOfAccounts.length > 0) {
+      getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, callback);
+
+    } else {
+      callback(csv);
+    }
+    
+  });
+}
+
 //ipcMain.on will receive the “btnclick” info from renderprocess 
 ipcMain.on("run-report", function (event, arg) {
   // blank the array each time
-  transactions = [];
-
-  store.set("selectedAccount", arg.ican);
-
+  mTransactions = [];
   const fromDate = new Date(arg.fromDate + 'T00:00:00').getTime();
   const toDate = new Date(arg.toDate + 'T23:59:59').getTime();
-  
   const offset = 0;
   const limit = 50;
 
-  getTransactions(arg.ican, fromDate, toDate, limit, offset, function(csv : string) {
-    fs.writeFileSync(path.join(app.getPath("userData"), "report.csv"), csv);
-    const savePath:string = dialog.showSaveDialogSync({ 
-      title: "Save Report As...", 
-      defaultPath: path.join(store.get('savePath'), "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv")
+  if (arg.ican == "all") {
+    // report on all accounts
+    // take a deep copy of the mAccounts. 
+    mCopyOfAccounts = [...mAccounts];
+
+    getClient().then(client => {
+      getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, function(csv: string) {
+        saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
+      });
     });
 
-    if (savePath != undefined) {
-      // save this directory as the default going foward
-      store.set("savePath", path.dirname(savePath));
+  } else {
+    // single account
+    store.set("selectedAccount", arg.ican);
+    getClient().then(client => {
+      getTransactions(client, arg.ican, fromDate, toDate, limit, offset, function(csv: string) {
+        saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
+      });
+    });
+  }
 
-      try {
-        fs.copyFileSync(
-          path.join(app.getPath("userData"), "report.csv"), 
-          savePath
-        );
-      } catch (err) {
-        console.log(err);
-      }
 
-      fs.rmSync(path.join(app.getPath("userData"), "report.csv"));
-
-      shell.showItemInFolder(savePath);
-    }
-
-  });
-  
 
 });

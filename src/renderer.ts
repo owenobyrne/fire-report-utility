@@ -100,6 +100,7 @@ window.api.receive("progress-update", function(param : any) {
 window.api.receive("accounts", function(accounts : Components.Schemas.Account[], selectedAccount?: number) {
     
     var values : any[] = [];
+    values.push({ value: "all", name: "All Accounts"});
 
     accounts.forEach((account) => {
         var item : any =  { value: account.ican, name: account.name };

@@ -261,7 +261,10 @@ const getTransactions = function(client: FireBusinessApiClient, ican: number, fr
     // this mTransacions is building up across all accounts, not being blanked between each one.
     mTransactions.push(...res.data.transactions);
 
-    mainWindow.webContents.send("progress-update", { total: res.data.total, progress: (offset + limit > total ? total : offset + limit) }); 
+    mainWindow.webContents.send("progress-update", { 
+      total: res.data.total, 
+      progress: (offset + limit > total ? total : offset + limit)
+    }); 
   
     if (offset + limit < total) {
       getTransactions(client, ican, fromDate, toDate, limit, offset + limit, callback);
@@ -307,6 +310,11 @@ const getTransactionsForAllAccounts = function(client:FireBusinessApiClient, fro
 
   let thisAccount: Components.Schemas.Account = mCopyOfAccounts.shift();
   getTransactions(client, thisAccount.ican, fromDate, toDate, limit, offset, function(csv: string) {
+
+    mainWindow.webContents.send("progress-update-accounts", { 
+      totalNumAccounts: mAccounts.length, 
+      accountsProcessed: mAccounts.length - mCopyOfAccounts.length
+    }); 
 
     if (mCopyOfAccounts.length > 0) {
       getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, callback);

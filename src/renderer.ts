@@ -41,6 +41,11 @@ function pageLoaded(){
     })
 
     $('#progressbar').progress();
+    
+    $('#progressbar-accounts').progress();
+    $('#progressbar-accounts').css("margin-bottom", "1em");
+    
+    $('#progressbar-accounts').hide();
 
     $('.ui.dropdown').dropdown();
 
@@ -50,6 +55,17 @@ function pageLoaded(){
 $("#runreport").on('click', function (event : any) {
     event.preventDefault(); 
     var selectedAccount =  $('.ui.dropdown').dropdown("get value");
+
+    if (selectedAccount == "all") {
+        $('#progressbar').addClass("small");
+        $('#progressbar').css("margin-bottom", "1em");
+        $('#progressbar-accounts').show();
+    } else {
+        $('#progressbar-accounts').hide();
+        $('#progressbar').removeClass("small");
+        $('#progressbar').css("margin-bottom", "2.5em");
+        
+    }
 
     $('#progressbar').progress("reset");
     $("#runreport").addClass("loading");
@@ -84,8 +100,7 @@ window.api.receive("configs", function(version: string, configs : Configuration)
 
 
 window.api.receive("progress-update", function(param : any) {
-    console.log(param);
-    
+
     $("#progressbar")
         .progress("set total", param.total)
         .progress("set progress", param.progress)
@@ -95,6 +110,14 @@ window.api.receive("progress-update", function(param : any) {
         $("#runreport").removeClass("loading");
         $("#progressbar").progress("set label", `${param.total} Transactions Retrieved.`);
     }
+});
+
+
+window.api.receive("progress-update-accounts", function(param : any) {    
+    $("#progressbar-accounts")
+        .progress("set total", param.totalNumAccounts)
+        .progress("set progress", param.accountsProcessed);
+
 });
 
 window.api.receive("accounts", function(accounts : Components.Schemas.Account[], selectedAccount?: number) {

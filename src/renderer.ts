@@ -47,8 +47,6 @@ function pageLoaded(){
     
     $('#progressbar-accounts').hide();
 
-    $("#beta-modal").modal("show");
-
     $('.ui.dropdown').dropdown();
 
     window.api.send('page-contents-loaded',"I'm ready");

@@ -47,10 +47,19 @@ function pageLoaded(){
     
     $('#progressbar-accounts').hide();
 
+    $("#beta-modal").modal("show");
+
     $('.ui.dropdown').dropdown();
 
     window.api.send('page-contents-loaded',"I'm ready");
 }
+
+$("#beta-modal-ok").on('click', function (event : any) {
+    event.preventDefault(); 
+    window.api.send("beta-agreement");
+    $("#beta-modal").modal("hide");
+
+});
 
 $("#runreport").on('click', function (event : any) {
     event.preventDefault(); 
@@ -84,13 +93,15 @@ window.api.receive("configuration-saved", function(result : any) {
     window.api.send('get-accounts');
 });
 
-window.api.receive("configs", function(version: string, configs : Configuration) {
+window.api.receive("configs", function(version: string, showBeta: boolean, configs : Configuration) {
     $("#clientId").val(configs.clientId);
     $("#clientKey").val(configs.clientKey);
     $("#refreshToken").val(configs.refreshToken); 
     
     $("#app-version").text(version);
 
+    if (showBeta) { $("#beta-modal").modal("show"); }
+    
     if (configs.clientId.length != 36) {
         $('#settings').accordion("open", 0);
     } else {

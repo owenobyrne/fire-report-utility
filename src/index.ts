@@ -29,7 +29,8 @@ const store = new Store({
     clientKey: '',
     refreshToken: '',
     selectedAccount: null,
-    savePath: app.getPath("downloads")
+    savePath: app.getPath("downloads"),
+    betaAgreementDate: null
   }
 });
 
@@ -66,6 +67,11 @@ const createWindow = (): void => {
       webSecurity: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
     }
+  });
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
   });
 
   // and load the index.html of the app.
@@ -197,11 +203,13 @@ ipcMain.on("page-contents-loaded", function (event, arg) {
  
   if (isDev) { console.log(JSON.stringify(store.store)); }
 
-  mainWindow.webContents.send("configs", version, apiToken);   
+  mainWindow.webContents.send("configs", version, (store.get("betaAgreementDate") ? false : true ), apiToken);   
 });
 
 
-
+ipcMain.on("beta-agreement", function (event, arg) {
+  store.set("betaAgreementDate", new Date().toISOString());
+});
 
 
 ipcMain.on("get-accounts", function (event, arg) {

@@ -87,6 +87,7 @@ $("#runreport").on('click', function (event : any) {
 $("#stopreport").on("click", function(event: any) {
     event.preventDefault();
     $("#runreport").prop("disabled", false);
+    $("#runreport").removeClass("loading");
     $("#stopreport").hide(); 
 
     // give any backend stuff time to complete, then reset. (not working for the second bar yet.... weird)
@@ -96,9 +97,6 @@ $("#stopreport").on("click", function(event: any) {
         $('#progressbar').progress("set progress", 0);
         
         $('#progressbar').progress("reset");
-
-        console.log($('#progressbar'));
-        
     
     }, 1000);
 
@@ -117,6 +115,22 @@ window.api.receive("configuration-saved", function(result : any) {
     $("#saveconfiguration").removeClass("loading");
     $('#settings').accordion("close", 0);
     window.api.send('get-accounts');
+});
+
+window.api.receive("report-finished", function() {
+    $("#runreport").prop("disabled", false);
+    $("#runreport").removeClass("loading");
+    $("#stopreport").hide(); 
+
+    // give any backend stuff time to complete, then reset. (not working for the second bar yet.... weird)
+    setTimeout(function() {
+        // $('#progressbar-accounts').progress("reset");
+        $('#progressbar').progress("remove success");
+        $('#progressbar').progress("set progress", 0);
+        
+        $('#progressbar').progress("reset");
+   
+    }, 1000);
 });
 
 window.api.receive("configs", function(version: string, showBeta: boolean, configs : Configuration) {

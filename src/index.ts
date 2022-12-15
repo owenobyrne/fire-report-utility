@@ -383,6 +383,8 @@ ipcMain.on("run-report", function (event, arg) {
         if (mReportRunning) {
           saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
         }
+
+        mainWindow.webContents.send("report-finished"); 
         mReportRunning = false;
       });
     });
@@ -396,6 +398,8 @@ ipcMain.on("run-report", function (event, arg) {
         if (mReportRunning) {
           saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
         }
+        
+        mainWindow.webContents.send("report-finished"); 
         mReportRunning = false;
       });
     });

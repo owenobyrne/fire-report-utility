@@ -18,7 +18,7 @@ contextBridge.exposeInMainWorld(
             }
         },
         receive: (channel : string, func : Function) => {
-            let validChannels = ["configs", "run-report-finished", "progress-update", "progress-update-accounts", "configuration-saved", "accounts"];
+            let validChannels = ["configs", "report-finished", "progress-update", "progress-update-accounts", "configuration-saved", "accounts"];
             if (validChannels.includes(channel)) {
                 console.log(`Setting up a listener on ${channel}`);
                 // Deliberately strip event as it includes `sender` 

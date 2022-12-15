@@ -44,6 +44,7 @@ let _fireBusinessApiClient : FireBusinessApiClient;
 let mAccounts : Components.Schemas.Account[] = [];
 let mCopyOfAccounts : Components.Schemas.Account[] = [];
 let mTransactions:Components.Schemas.Transaction[] = [];
+let mReportRunning: boolean = false;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -257,8 +258,16 @@ ipcMain.on("save-configuration", function (event, arg) {
 
 });
 
-const getTransactions = function(client: FireBusinessApiClient, ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
+
+ipcMain.on("stop-report", function (event, arg) {
+  mReportRunning = false;
+  console.log("Report Cancelled");
   
+});
+
+const getTransactions = function(client: FireBusinessApiClient, ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
+  console.log(`Getting more transactions: ican: ${ican}`);
+
   client.getTransactionsFilteredById(
     {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
     null, 
@@ -269,17 +278,28 @@ const getTransactions = function(client: FireBusinessApiClient, ican: number, fr
     // this mTransacions is building up across all accounts, not being blanked between each one.
     mTransactions.push(...res.data.transactions);
 
-    mainWindow.webContents.send("progress-update", { 
-      total: res.data.total, 
-      progress: (offset + limit > total ? total : offset + limit)
-    }); 
-  
-    if (offset + limit < total) {
-      getTransactions(client, ican, fromDate, toDate, limit, offset + limit, callback);
-    } else {
+    if (mReportRunning) {
+      
+      mainWindow.webContents.send("progress-update", { 
+        total: res.data.total, 
+        progress: (offset + limit > total ? total : offset + limit),
+        totalNumAccounts: mAccounts.length, 
+        accountsProcessed: mAccounts.length - mCopyOfAccounts.length
+      }); 
+    
+      if (offset + limit < total) {
+        // leave 50ms between each call. 
+        setTimeout(function() {
+          getTransactions(client, ican, fromDate, toDate, limit, offset + limit, callback);
+        }, 50);
+        
+        
+      } else {
 
-      let csv:string = CreateCsvFile.generate(mTransactions, true, "filename.csv");
-      callback(csv);
+        let csv:string = CreateCsvFile.generate(mTransactions, true, "filename.csv");
+        callback(csv);
+      }
+      
     }
 
 
@@ -319,16 +339,23 @@ const getTransactionsForAllAccounts = function(client:FireBusinessApiClient, fro
   let thisAccount: Components.Schemas.Account = mCopyOfAccounts.shift();
   getTransactions(client, thisAccount.ican, fromDate, toDate, limit, offset, function(csv: string) {
 
-    mainWindow.webContents.send("progress-update-accounts", { 
-      totalNumAccounts: mAccounts.length, 
-      accountsProcessed: mAccounts.length - mCopyOfAccounts.length
-    }); 
-
-    if (mCopyOfAccounts.length > 0) {
-      getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, callback);
-
-    } else {
-      callback(csv);
+    if (mReportRunning) {
+      
+      mainWindow.webContents.send("progress-update-accounts", { 
+        totalNumAccounts: mAccounts.length, 
+        accountsProcessed: mAccounts.length - mCopyOfAccounts.length
+      }); 
+  
+      if (mCopyOfAccounts.length > 0) {
+        // leave a second between each account, just to give the system a chance. 
+        setTimeout(function() {
+          getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, callback);
+        }, 1000);
+  
+      } else {
+        callback(csv);
+      }
+  
     }
     
   });
@@ -343,6 +370,8 @@ ipcMain.on("run-report", function (event, arg) {
   const offset = 0;
   const limit = 50;
 
+  mReportRunning = true;
+
   if (arg.ican == "all") {
     // report on all accounts
     // take a deep copy of the mAccounts. 
@@ -350,7 +379,11 @@ ipcMain.on("run-report", function (event, arg) {
 
     getClient().then(client => {
       getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, function(csv: string) {
-        saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
+        // don't offer to save if the report was cancelled
+        if (mReportRunning) {
+          saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
+        }
+        mReportRunning = false;
       });
     });
 
@@ -359,7 +392,11 @@ ipcMain.on("run-report", function (event, arg) {
     store.set("selectedAccount", arg.ican);
     getClient().then(client => {
       getTransactions(client, arg.ican, fromDate, toDate, limit, offset, function(csv: string) {
-        saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
+        // don't offer to save if the report was cancelled
+        if (mReportRunning) {
+          saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
+        }
+        mReportRunning = false;
       });
     });
   }

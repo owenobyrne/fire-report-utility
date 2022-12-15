@@ -47,6 +47,8 @@ function pageLoaded(){
     
     $('#progressbar-accounts').hide();
 
+    $("#stopreport").hide();
+
     $('.ui.dropdown').dropdown();
 
     window.api.send('page-contents-loaded',"I'm ready");
@@ -76,7 +78,33 @@ $("#runreport").on('click', function (event : any) {
 
     $('#progressbar').progress("reset");
     $("#runreport").addClass("loading");
+    $("#runreport").prop("disabled", true);
+    $("#stopreport").show(); 
+
     window.api.send("run-report", { ican: selectedAccount, fromDate: getISODate($("#fromDate").calendar("get date")), toDate: getISODate($("#toDate").calendar("get date")) } ); 
+});
+
+$("#stopreport").on("click", function(event: any) {
+    event.preventDefault();
+    $("#runreport").prop("disabled", false);
+    $("#stopreport").hide(); 
+
+    // give any backend stuff time to complete, then reset. (not working for the second bar yet.... weird)
+    setTimeout(function() {
+        // $('#progressbar-accounts').progress("reset");
+        $('#progressbar').progress("remove success");
+        $('#progressbar').progress("set progress", 0);
+        
+        $('#progressbar').progress("reset");
+
+        console.log($('#progressbar'));
+        
+    
+    }, 1000);
+
+    window.api.send("stop-report"); 
+
+
 });
 
 $("#saveconfiguration").on('click', function (event : any) {
@@ -109,15 +137,19 @@ window.api.receive("configs", function(version: string, showBeta: boolean, confi
 
 
 window.api.receive("progress-update", function(param : any) {
-
+    var allAccountsLabel = "";
+    if (param.accountsProcessed > 1) {
+        allAccountsLabel = `Account ${param.accountsProcessed} of ${param.totalNumAccounts} /`;
+    }
+    
     $("#progressbar")
         .progress("set total", param.total)
         .progress("set progress", param.progress)
-        .progress("set label", `Retrieved ${param.progress} of ${param.total} transactions...`);
+        .progress("set label", `${allAccountsLabel} Retrieved ${param.progress} of ${param.total} transactions...`);
 
     if (param.progress == param.total) {
         $("#runreport").removeClass("loading");
-        $("#progressbar").progress("set label", `${param.total} Transactions Retrieved.`);
+        $("#progressbar").progress("set label", "");
     }
 });
 

@@ -48,6 +48,8 @@ function pageLoaded(){
     $('#progressbar-accounts').hide();
 
     $("#stopreport").hide();
+    
+    $("#error-modal").modal("hide");
 
     $('.ui.dropdown').dropdown();
 
@@ -58,6 +60,12 @@ $("#beta-modal-ok").on('click', function (event : any) {
     event.preventDefault(); 
     window.api.send("beta-agreement");
     $("#beta-modal").modal("hide");
+
+});
+
+$("#error-modal-ok").on('click', function (event : any) {
+    event.preventDefault(); 
+    $("#error-modal").modal("hide");
 
 });
 
@@ -117,7 +125,12 @@ window.api.receive("configuration-saved", function(result : any) {
     window.api.send('get-accounts');
 });
 
-window.api.receive("report-finished", function() {
+window.api.receive("report-finished", function(data: any) {
+    if (data && data.error) {
+        $("#error-modal .content").text(data.error)
+        $("#error-modal").modal("show");
+    }
+
     $("#runreport").prop("disabled", false);
     $("#runreport").removeClass("loading");
     $("#stopreport").hide(); 

@@ -2,6 +2,7 @@ import { app, Menu, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { Client as FireBusinessApiClient, Components, Paths } from './types/fire-business-api';
+import type { AxiosError } from 'openapi-client-axios'; 
 import sha256 from 'sha256';
 import { OpenAPIClientAxios, AxiosResponse } from 'openapi-client-axios';
 import CreateCsvFile from './csv-format';
@@ -38,7 +39,8 @@ declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 let accessToken = "";
-let accessTokenExpiryDate: Date;
+let retryCount = 0;
+let accessTokenExpiryDate: Date = new Date(100000); // set a valid date in the past
 let mainWindow : BrowserWindow;
 let _fireBusinessApiClient : FireBusinessApiClient;
 let mAccounts : Components.Schemas.Account[] = [];
@@ -140,14 +142,12 @@ const loadAccounts = function(client: FireBusinessApiClient) {
 const api = new OpenAPIClientAxios({ definition: path.join(__dirname, "static/fire-business-api-v1.yml") });
 
 const getClient = function() {
-  console.log("Getting client....");
-  console.log(store.get("clientId"));
-
+  
   return new Promise<FireBusinessApiClient>((resolve, reject) => {
     // do we have a client already?
     if (_fireBusinessApiClient != null) {
       // check the expiry on the accessToken
-      if (new Date() > accessTokenExpiryDate) {
+      if (new Date() >  new Date(accessTokenExpiryDate.getTime() - (10 * 60 * 1000))) {
         getAccessToken(_fireBusinessApiClient).then(result => { 
           resolve(_fireBusinessApiClient); 
         });
@@ -180,7 +180,12 @@ const getAccessToken = function(client: FireBusinessApiClient) {
       // console.log(gatres);
       accessToken = gatres.data.accessToken;
       accessTokenExpiryDate = new Date(gatres.data.expiry);
+      console.log(`Got new access token: ${accessToken} (${accessTokenExpiryDate})`);
       resolve("ok");
+    }).catch(err => {
+      console.log(err);
+      console.log("Could not get API client");
+      mainWindow.webContents.send("report-finished", { error: "Could not get Access Token for API. Check your API Token information is correct." });
     });
   });
 }
@@ -232,7 +237,8 @@ ipcMain.on("get-accounts", function (event, arg) {
     });
   })
   .catch(err => {
-    // notify the UI
+    console.log("Could not get API client");
+    mainWindow.webContents.send("report-finished", { error: err });
   });
 });
 
@@ -253,7 +259,8 @@ ipcMain.on("save-configuration", function (event, arg) {
       });
     })
     .catch(err => {
-      // notify the UI
+      console.log("Could not get API client");
+      mainWindow.webContents.send("report-finished", { error: err });
     });
 
 });
@@ -268,41 +275,72 @@ ipcMain.on("stop-report", function (event, arg) {
 const getTransactions = function(client: FireBusinessApiClient, ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
   console.log(`Getting more transactions: ican: ${ican}`);
 
-  client.getTransactionsFilteredById(
-    {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
-    null, 
-    { headers: { "Authorization": "Bearer " + accessToken }}
-  ).then(res => {
-    let total = res.data.total;
+  getClient().then(client => { 
 
-    // this mTransacions is building up across all accounts, not being blanked between each one.
-    mTransactions.push(...res.data.transactions);
+    client.getTransactionsFilteredById(
+      {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
+      null, 
+      { headers: { "Authorization": "Bearer " + accessToken }}
+    ).then(res => {
+      let total = res.data.total;
 
-    if (mReportRunning) {
+      // this mTransacions is building up across all accounts, not being blanked between each one.
+      mTransactions.push(...res.data.transactions);
+
+      if (mReportRunning) {
+        
+        mainWindow.webContents.send("progress-update", { 
+          total: res.data.total, 
+          progress: (offset + limit > total ? total : offset + limit),
+          totalNumAccounts: mAccounts.length, 
+          accountsProcessed: mAccounts.length - mCopyOfAccounts.length
+        }); 
       
-      mainWindow.webContents.send("progress-update", { 
-        total: res.data.total, 
-        progress: (offset + limit > total ? total : offset + limit),
-        totalNumAccounts: mAccounts.length, 
-        accountsProcessed: mAccounts.length - mCopyOfAccounts.length
-      }); 
-    
-      if (offset + limit < total) {
-        // leave 50ms between each call. 
-        setTimeout(function() {
-          getTransactions(client, ican, fromDate, toDate, limit, offset + limit, callback);
-        }, 50);
-        
-        
-      } else {
+        if (offset + limit < total) {
+          // leave 50ms between each call. 
+          setTimeout(function() {
+            getTransactions(client, ican, fromDate, toDate, limit, offset + limit, callback);
+          }, 50);
+          
+          
+        } else {
 
-        let csv:string = CreateCsvFile.generate(mTransactions, true, "filename.csv");
-        callback(csv);
+          let csv:string = CreateCsvFile.generate(mTransactions, true, "filename.csv");
+          callback(csv);
+        }
+        
       }
+
+
+    }).catch((err: AxiosError) => {
+      console.log(err);
       
-    }
+      if (err.response.status == 403) {
+        retryCount++;
 
+        if (retryCount < 3) {
+          // get a new access token and go again.
+          getClient()
+          .then(client => { 
+            getTransactions(client, ican, fromDate, toDate, limit, offset, callback);
+          });
 
+        } else {
+          mReportRunning = false;
+          console.log("Report stopped due to API error - max retries exceeded");
+          mainWindow.webContents.send("report-finished", { error: "There was an issue gathering transactions from the API. Try to run your report again. If the problems persist, please contact Fire." });
+          retryCount = 0;
+        }
+        
+
+      } else {
+        mReportRunning = false;
+        console.log("Report stopped due to API error");
+        mainWindow.webContents.send("report-finished", { error: "There was an issue gathering transactions from the API. Try to run your report again. If the problems persist, please contact Fire." });
+
+      }
+
+    });
   });
 
 }
@@ -394,6 +432,7 @@ ipcMain.on("run-report", function (event, arg) {
     store.set("selectedAccount", arg.ican);
     getClient().then(client => {
       getTransactions(client, arg.ican, fromDate, toDate, limit, offset, function(csv: string) {
+
         // don't offer to save if the report was cancelled
         if (mReportRunning) {
           saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");

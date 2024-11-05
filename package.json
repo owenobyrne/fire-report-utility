@@ -35,7 +35,6 @@
     "css-loader": "^4.3.0",
     "electron": "^18.2.0",
     "electron-installer-dmg": "^4.0.0",
-    "appdmg": "0.6.4",
     "eslint": "^7.21.0",
     "eslint-plugin-import": "^2.22.1",
     "fork-ts-checker-webpack-plugin": "^5.2.1",
@@ -44,6 +43,9 @@
     "ts-loader": "^8.0.17",
     "typescript": "^4.2.3",
     "webpack-bugsnag-plugins": "^1.8.0"
+  },
+  "optionalDependencies": {
+    "appdmg": "0.6.4"
   },
   "dependencies": {
     "@bugsnag/js": "^7.8.0",

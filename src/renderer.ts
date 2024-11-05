@@ -1,5 +1,5 @@
 import './index.css';
-import { Components } from './types/fire-business-api'; 
+import { Paths } from './types/fire-business-api'; 
 
 // typescript gets very snarky when there's no type definitions for things, 
 // and getting jquery-ui or semantic-ui to work was a bitch.
@@ -188,7 +188,7 @@ window.api.receive("progress-update-accounts", function(param : any) {
 
 });
 
-window.api.receive("accounts", function(accounts : Components.Schemas.Account[], selectedAccount?: number) {
+window.api.receive("accounts", function(accounts : Paths.GetAccountById.Responses.$200[], selectedAccount?: number) {
     
     var values : any[] = [];
     values.push({ value: "all", name: "All Accounts"});

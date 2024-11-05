@@ -1,7 +1,7 @@
 import { app, Menu, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { Client as FireBusinessApiClient, Components, Paths } from './types/fire-business-api';
+import { Client as FireBusinessApiClient, Paths } from './types/fire-business-api';
 import type { AxiosError } from 'openapi-client-axios'; 
 import sha256 from 'sha256';
 import { OpenAPIClientAxios, AxiosResponse } from 'openapi-client-axios';
@@ -43,9 +43,9 @@ let retryCount = 0;
 let accessTokenExpiryDate: Date = new Date(100000); // set a valid date in the past
 let mainWindow : BrowserWindow;
 let _fireBusinessApiClient : FireBusinessApiClient;
-let mAccounts : Components.Schemas.Account[] = [];
-let mCopyOfAccounts : Components.Schemas.Account[] = [];
-let mTransactions:Components.Schemas.Transaction[] = [];
+let mAccounts : Paths.GetAccountById.Responses.$200[] = [];
+let mCopyOfAccounts : Paths.GetAccountById.Responses.$200[] = [];
+let mTransactions: Paths.GetTransactionsByAccountIdFiltered.Responses.$200["transactions"] = [];
 let mReportRunning: boolean = false;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -65,7 +65,6 @@ const createWindow = (): void => {
       sandbox: true,
       // Allow Ipc to/from sandbox
       contextIsolation: true,
-      enableRemoteModule: false, // turn off remote
       // No insecure code.
       webSecurity: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
@@ -139,7 +138,7 @@ const loadAccounts = function(client: FireBusinessApiClient) {
 }
 
 
-const api = new OpenAPIClientAxios({ definition: path.join(__dirname, "static/fire-business-api-v1.yml") });
+const api = new OpenAPIClientAxios({ definition: path.join(__dirname, "static/fire-business-api-v1.yaml") });
 
 const getClient = function() {
   
@@ -277,7 +276,7 @@ const getTransactions = function(client: FireBusinessApiClient, ican: number, fr
 
   getClient().then(client => { 
 
-    client.getTransactionsFilteredById(
+    client.getTransactionsByAccountIdFiltered(
       {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
       null, 
       { headers: { "Authorization": "Bearer " + accessToken }}
@@ -374,7 +373,7 @@ const saveFile = function(csv : string, filename: string) {
 
 const getTransactionsForAllAccounts = function(client:FireBusinessApiClient, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) { 
 
-  let thisAccount: Components.Schemas.Account = mCopyOfAccounts.shift();
+  let thisAccount: Paths.GetAccountById.Responses.$200 = mCopyOfAccounts.shift();
   getTransactions(client, thisAccount.ican, fromDate, toDate, limit, offset, function(csv: string) {
 
     if (mReportRunning) {

@@ -1,7 +1,7 @@
 import { app, Menu, MenuItemConstructorOptions, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import { Client as FireBusinessApiClient, Paths } from './types/fire-business-api';
+import { Client as FireBusinessApiClient, Account, Transaction, Paths } from './types/fire-business-api';
 import type { AxiosError } from 'openapi-client-axios'; 
 import sha256 from 'sha256';
 import { OpenAPIClientAxios, AxiosResponse } from 'openapi-client-axios';
@@ -43,9 +43,9 @@ let retryCount = 0;
 let accessTokenExpiryDate: Date = new Date(100000); // set a valid date in the past
 let mainWindow : BrowserWindow;
 let _fireBusinessApiClient : FireBusinessApiClient;
-let mAccounts : Paths.GetAccountById.Responses.$200[] = [];
-let mCopyOfAccounts : Paths.GetAccountById.Responses.$200[] = [];
-let mTransactions: Paths.GetTransactionsByAccountIdFiltered.Responses.$200["transactions"] = [];
+let mAccounts : Account[] = [];
+let mCopyOfAccounts : Account[] = [];
+let mTransactions: Transaction[] = [];
 let mReportRunning: boolean = false;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -223,8 +223,8 @@ ipcMain.on("get-accounts", function (event, arg) {
     loadAccounts(client).then((res) => {
       console.log(typeof res.data);
 
-      if ((res.data as Paths.GetAccounts.Responses.$200).accounts) {
-        mAccounts = (res.data as Paths.GetAccounts.Responses.$200).accounts;
+      if (res.data.accounts as Account[]) {
+        mAccounts = (res.data.accounts as Account[]);
         mainWindow.webContents.send("accounts", mAccounts, store.get("selectedAccount"));   
 
       } 
@@ -271,49 +271,57 @@ ipcMain.on("stop-report", function (event, arg) {
   
 });
 
-const getTransactions = function(client: FireBusinessApiClient, ican: number, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) {
+const getTransactions = function(client: FireBusinessApiClient, ican: number, fromDate: number, toDate: number, limit: number, startAfter: string, callback: Function) {
   console.log(`Getting more transactions: ican: ${ican}`);
 
   getClient().then(client => { 
+    let queryParams;
 
-    client.getTransactionsByAccountIdFiltered(
-      { ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset, searchKeyword: null, transactionTypes: null },
-      null, 
+    if (startAfter != null) {
+      queryParams = { ican: ican, startAfter: startAfter };  
+    } else {
+      queryParams = { ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit };
+    }
+
+    client.getTransactionsByAccountIdv3(
+      queryParams,
+      null,
       { headers: { "Authorization": "Bearer " + accessToken }}
     ).then(res => {
-      let total = res.data.total;
-
       // this mTransacions is building up across all accounts, not being blanked between each one.
-      mTransactions.push(...res.data.transactions);
+      mTransactions.push(...res.data.content);
 
       if (mReportRunning) {
-        
+      
+        let nextPage = res.data.links.filter(link => { return link.rel == "next"});
+
         mainWindow.webContents.send("progress-update", { 
-          total: res.data.total, 
-          progress: (offset + limit > total ? total : offset + limit),
+          complete: nextPage.length == 0,
+          progress: (mTransactions.length),
           totalNumAccounts: mAccounts.length, 
           accountsProcessed: mAccounts.length - mCopyOfAccounts.length
         }); 
-      
-        if (offset + limit < total) {
+
+        if (nextPage.length > 0) {
+          const nextPageUrl = new URL(nextPage[0].href);
+          const startAfterParam = nextPageUrl.searchParams.get("startAfter");
+
           // leave 50ms between each call. 
           setTimeout(function() {
-            getTransactions(client, ican, fromDate, toDate, limit, offset + limit, callback);
+            getTransactions(client, ican, fromDate, toDate, limit, startAfterParam, callback);
           }, 50);
           
-          
+
         } else {
 
           let csv:string = CreateCsvFile.generate(mTransactions, true, "filename.csv");
           callback(csv);
         }
-        
       }
-
-
+      
     }).catch((err: AxiosError) => {
       console.log(err);
-      
+
       if (err.response.status == 403) {
         retryCount++;
 
@@ -321,7 +329,7 @@ const getTransactions = function(client: FireBusinessApiClient, ican: number, fr
           // get a new access token and go again.
           getClient()
           .then(client => { 
-            getTransactions(client, ican, fromDate, toDate, limit, offset, callback);
+            getTransactions(client, ican, fromDate, toDate, limit, startAfter, callback);
           });
 
         } else {
@@ -340,8 +348,9 @@ const getTransactions = function(client: FireBusinessApiClient, ican: number, fr
       }
 
     });
-  });
 
+
+  });
 }
 
 const saveFile = function(csv : string, filename: string) {
@@ -371,10 +380,10 @@ const saveFile = function(csv : string, filename: string) {
 
 }
 
-const getTransactionsForAllAccounts = function(client:FireBusinessApiClient, fromDate: number, toDate: number, limit: number, offset: number, callback: Function) { 
+const getTransactionsForAllAccounts = function(client:FireBusinessApiClient, fromDate: number, toDate: number, limit: number, callback: Function) { 
 
-  let thisAccount: Paths.GetAccountById.Responses.$200 = mCopyOfAccounts.shift();
-  getTransactions(client, thisAccount.ican, fromDate, toDate, limit, offset, function(csv: string) {
+  let thisAccount: Account = mCopyOfAccounts.shift();
+  getTransactions(client, thisAccount.ican, fromDate, toDate, limit, null, function(csv: string) {
 
     if (mReportRunning) {
       
@@ -386,7 +395,7 @@ const getTransactionsForAllAccounts = function(client:FireBusinessApiClient, fro
       if (mCopyOfAccounts.length > 0) {
         // leave a second between each account, just to give the system a chance. 
         setTimeout(function() {
-          getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, callback);
+          getTransactionsForAllAccounts(client, fromDate, toDate, limit, callback);
         }, 1000);
   
       } else {
@@ -404,8 +413,7 @@ ipcMain.on("run-report", function (event, arg) {
   mTransactions = [];
   const fromDate = new Date(arg.fromDate + 'T00:00:00').getTime();
   const toDate = new Date(arg.toDate + 'T23:59:59').getTime();
-  const offset = 0;
-  const limit = 50;
+  const limit = 200;
 
   mReportRunning = true;
 
@@ -415,7 +423,7 @@ ipcMain.on("run-report", function (event, arg) {
     mCopyOfAccounts = [...mAccounts];
 
     getClient().then(client => {
-      getTransactionsForAllAccounts(client, fromDate, toDate, limit, offset, function(csv: string) {
+      getTransactionsForAllAccounts(client, fromDate, toDate, limit, function(csv: string) {
         // don't offer to save if the report was cancelled
         if (mReportRunning) {
           saveFile(csv, "fire-report-"+arg.fromDate.replace(/-/gi, "")+"-"+arg.toDate.replace(/-/gi, "")+".csv");
@@ -428,9 +436,11 @@ ipcMain.on("run-report", function (event, arg) {
 
   } else {
     // single account
+    mCopyOfAccounts = [];
+
     store.set("selectedAccount", arg.ican);
     getClient().then(client => {
-      getTransactions(client, arg.ican, fromDate, toDate, limit, offset, function(csv: string) {
+      getTransactions(client, arg.ican, fromDate, toDate, limit, null, function(csv: string) {
 
         // don't offer to save if the report was cancelled
         if (mReportRunning) {

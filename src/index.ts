@@ -1,4 +1,4 @@
-import { app, Menu, BrowserWindow, ipcMain, dialog, shell } from 'electron';
+import { app, Menu, MenuItemConstructorOptions, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { Client as FireBusinessApiClient, Paths } from './types/fire-business-api';
@@ -86,11 +86,11 @@ const createWindow = (): void => {
 };
 
 // Create the Application's main menu
-const template = [{
+const template : MenuItemConstructorOptions[] = [{
   label: "Fire Report Utility",
   submenu: [
-      { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-      { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+      { label: "Copy", accelerator: "CmdOrCtrl+C" },
+      { label: "Paste", accelerator: "CmdOrCtrl+V" },
       { type: "separator" },
       { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
     ]}
@@ -277,7 +277,7 @@ const getTransactions = function(client: FireBusinessApiClient, ican: number, fr
   getClient().then(client => { 
 
     client.getTransactionsByAccountIdFiltered(
-      {ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset},
+      { ican: ican, dateRangeFrom: fromDate, dateRangeTo: toDate, limit: limit, offset: offset, searchKeyword: null, transactionTypes: null },
       null, 
       { headers: { "Authorization": "Bearer " + accessToken }}
     ).then(res => {

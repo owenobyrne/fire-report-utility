@@ -14,10 +14,9 @@ npm install json-refs --g
 json-refs resolve ./static/fire-business-api-v1.yaml > ./static/fire-business-api-v1-resolved.yaml
 ``` 
 
-Then create the type file.
+Then create the type file - run the npx command without the > param first to install it. 
 ```bash
-npm install -g openapi-client-axios-typegen
-typegen ./static/fire-business-api-v1-resolved.yaml > ./src/types/fire-business-api.d.ts
+npx openapicmd typegen ./static/fire-business-api-v1-resolved.yaml > ./src/types/fire-business-api.d.ts
 ```
 
 

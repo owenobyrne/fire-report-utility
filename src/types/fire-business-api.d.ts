@@ -4,7 +4,7 @@ import type {
   UnknownParamsObject,
   OperationResponse,
   AxiosRequestConfig,
-} from 'openapi-client-axios'; 
+} from 'openapi-client-axios';
 
 declare namespace Components {
     namespace Parameters {
@@ -3222,7 +3222,7 @@ declare namespace Paths {
                         cardMerchant?: {
                             /**
                              * example:
-                             * 6011329
+                             * 06011329
                              */
                             acquirerIdDe32?: string;
                             additionalAmtDe54?: string;
@@ -3249,7 +3249,7 @@ declare namespace Paths {
                             mccCode?: string;
                             /**
                              * example:
-                             * 13152429
+                             * 013152429
                              */
                             merchIdDe42?: string;
                             /**
@@ -3259,7 +3259,7 @@ declare namespace Paths {
                             merchNameDe43?: string;
                             /**
                              * example:
-                             * 1000030037299999
+                             * 000001000030037299999
                              */
                             posDataDe61?: string;
                             /**
@@ -3284,7 +3284,7 @@ declare namespace Paths {
                             respCodeDe39?: string;
                             /**
                              * example:
-                             * 10900006720
+                             * 010900006720
                              */
                             retRefNoDe37?: string;
                             /**
@@ -4214,7 +4214,7 @@ declare namespace Paths {
                     /**
                      * This is a reference you use to uniquely identify each of your customers.
                      * example:
-                     * 8303863544
+                     * 08303863544
                      */
                     merchantCustomerIdentification?: string;
                     /**
@@ -4591,7 +4591,7 @@ declare namespace Paths {
                     /**
                      * This is a reference you use to uniquely identify each of your customers.
                      * example:
-                     * 8303863544
+                     * 08303863544
                      */
                     merchantCustomerIdentification?: string;
                     /**
@@ -4926,7 +4926,7 @@ declare namespace Paths {
                     /**
                      * This is a reference you use to uniquely identify each of your customers.
                      * example:
-                     * 8303863544
+                     * 08303863544
                      */
                     merchantCustomerIdentification?: string;
                     /**
@@ -5191,7 +5191,7 @@ declare namespace Paths {
                         /**
                          * This is a reference you use to uniquely identify each of your customers.
                          * example:
-                         * 8303863544
+                         * 08303863544
                          */
                         merchantCustomerIdentification?: string;
                         /**
@@ -5576,7 +5576,7 @@ declare namespace Paths {
                         /**
                          * This is a reference you use to uniquely identify each of your customers.
                          * example:
-                         * 8303863544
+                         * 08303863544
                          */
                         merchantCustomerIdentification?: string;
                         /**
@@ -5916,7 +5916,7 @@ declare namespace Paths {
                         /**
                          * This is a reference you use to uniquely identify each of your customers.
                          * example:
-                         * 8303863544
+                         * 08303863544
                          */
                         merchantCustomerIdentification?: string;
                         /**
@@ -6723,7 +6723,7 @@ declare namespace Paths {
                         cardMerchant?: {
                             /**
                              * example:
-                             * 6011329
+                             * 06011329
                              */
                             acquirerIdDe32?: string;
                             additionalAmtDe54?: string;
@@ -6750,7 +6750,7 @@ declare namespace Paths {
                             mccCode?: string;
                             /**
                              * example:
-                             * 13152429
+                             * 013152429
                              */
                             merchIdDe42?: string;
                             /**
@@ -6760,7 +6760,7 @@ declare namespace Paths {
                             merchNameDe43?: string;
                             /**
                              * example:
-                             * 1000030037299999
+                             * 000001000030037299999
                              */
                             posDataDe61?: string;
                             /**
@@ -6785,7 +6785,7 @@ declare namespace Paths {
                             respCodeDe39?: string;
                             /**
                              * example:
-                             * 10900006720
+                             * 010900006720
                              */
                             retRefNoDe37?: string;
                             /**
@@ -7356,7 +7356,7 @@ declare namespace Paths {
                         cardMerchant?: {
                             /**
                              * example:
-                             * 6011329
+                             * 06011329
                              */
                             acquirerIdDe32?: string;
                             additionalAmtDe54?: string;
@@ -7383,7 +7383,7 @@ declare namespace Paths {
                             mccCode?: string;
                             /**
                              * example:
-                             * 13152429
+                             * 013152429
                              */
                             merchIdDe42?: string;
                             /**
@@ -7393,7 +7393,7 @@ declare namespace Paths {
                             merchNameDe43?: string;
                             /**
                              * example:
-                             * 1000030037299999
+                             * 000001000030037299999
                              */
                             posDataDe61?: string;
                             /**
@@ -7418,7 +7418,7 @@ declare namespace Paths {
                             respCodeDe39?: string;
                             /**
                              * example:
-                             * 10900006720
+                             * 010900006720
                              */
                             retRefNoDe37?: string;
                             /**
@@ -8001,7 +8001,7 @@ declare namespace Paths {
                         cardMerchant?: {
                             /**
                              * example:
-                             * 6011329
+                             * 06011329
                              */
                             acquirerIdDe32?: string;
                             additionalAmtDe54?: string;
@@ -8028,7 +8028,7 @@ declare namespace Paths {
                             mccCode?: string;
                             /**
                              * example:
-                             * 13152429
+                             * 013152429
                              */
                             merchIdDe42?: string;
                             /**
@@ -8038,7 +8038,7 @@ declare namespace Paths {
                             merchNameDe43?: string;
                             /**
                              * example:
-                             * 1000030037299999
+                             * 000001000030037299999
                              */
                             posDataDe61?: string;
                             /**
@@ -8063,7 +8063,7 @@ declare namespace Paths {
                             respCodeDe39?: string;
                             /**
                              * example:
-                             * 10900006720
+                             * 010900006720
                              */
                             retRefNoDe37?: string;
                             /**
@@ -8457,7 +8457,7 @@ declare namespace Paths {
                 /**
                  * This is a reference you use to uniquely identify each of your customers.
                  * example:
-                 * 8303863544
+                 * 08303863544
                  */
                 merchantCustomerIdentification?: string;
                 /**
@@ -8690,7 +8690,7 @@ export interface OperationMethods {
    * You can retrieve the details of a fire.com Account by its `ican`.
    */
   'getAccountById'(
-    parameters: Parameters<Paths.GetAccountById.PathParameters>,
+    parameters?: Parameters<Paths.GetAccountById.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetAccountById.Responses.$200>
@@ -8700,7 +8700,7 @@ export interface OperationMethods {
    * Retrieve a list of transactions against an account. Recommended to use the v3 endpoint instead.
    */
   'getTransactionsByAccountIdv1'(
-    parameters: Parameters<Paths.GetTransactionsByAccountIdv1.QueryParameters & Paths.GetTransactionsByAccountIdv1.PathParameters>,
+    parameters?: Parameters<Paths.GetTransactionsByAccountIdv1.QueryParameters & Paths.GetTransactionsByAccountIdv1.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetTransactionsByAccountIdv1.Responses.$200>
@@ -8711,7 +8711,7 @@ export interface OperationMethods {
    * 
    */
   'getTransactionsByAccountIdv3'(
-    parameters: Parameters<Paths.GetTransactionsByAccountIdv3.QueryParameters & Paths.GetTransactionsByAccountIdv3.PathParameters>,
+    parameters?: Parameters<Paths.GetTransactionsByAccountIdv3.QueryParameters & Paths.GetTransactionsByAccountIdv3.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetTransactionsByAccountIdv3.Responses.$200>
@@ -8728,7 +8728,7 @@ export interface OperationMethods {
    * 
    */
   'getTransactionsByAccountIdFiltered'(
-    parameters: Parameters<Paths.GetTransactionsByAccountIdFiltered.QueryParameters & Paths.GetTransactionsByAccountIdFiltered.PathParameters>,
+    parameters?: Parameters<Paths.GetTransactionsByAccountIdFiltered.QueryParameters & Paths.GetTransactionsByAccountIdFiltered.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetTransactionsByAccountIdFiltered.Responses.$200>
@@ -8758,7 +8758,7 @@ export interface OperationMethods {
    * Returns a list of cards transactions related to your fire.com card.
    */
   'getListofCardTransactions'(
-    parameters: Parameters<Paths.GetListofCardTransactions.QueryParameters & Paths.GetListofCardTransactions.PathParameters>,
+    parameters?: Parameters<Paths.GetListofCardTransactions.QueryParameters & Paths.GetListofCardTransactions.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetListofCardTransactions.Responses.$200>
@@ -8768,7 +8768,7 @@ export interface OperationMethods {
    * Updates status of an existing card to block which prevents any transactions being carried out with that card.
    */
   'blockCard'(
-    parameters: Parameters<Paths.BlockCard.PathParameters>,
+    parameters?: Parameters<Paths.BlockCard.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.BlockCard.Responses.$204>
@@ -8778,7 +8778,7 @@ export interface OperationMethods {
    * Updates status of an existing card to unblock which means that transactions can be carried out with that card.
    */
   'unblockCard'(
-    parameters: Parameters<Paths.UnblockCard.PathParameters>,
+    parameters?: Parameters<Paths.UnblockCard.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.UnblockCard.Responses.$204>
@@ -8800,7 +8800,7 @@ export interface OperationMethods {
    * 
    */
   'getPaymentRequestDetails'(
-    parameters: Parameters<Paths.GetPaymentRequestDetails.PathParameters>,
+    parameters?: Parameters<Paths.GetPaymentRequestDetails.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPaymentRequestDetails.Responses.$200>
@@ -8811,7 +8811,7 @@ export interface OperationMethods {
    * 
    */
   'getPaymentRequestPayments'(
-    parameters: Parameters<Paths.GetPaymentRequestPayments.PathParameters>,
+    parameters?: Parameters<Paths.GetPaymentRequestPayments.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPaymentRequestPayments.Responses.$200>
@@ -8822,7 +8822,7 @@ export interface OperationMethods {
    * 
    */
   'getPaymentRequestPaymentsv2'(
-    parameters: Parameters<Paths.GetPaymentRequestPaymentsv2.PathParameters>,
+    parameters?: Parameters<Paths.GetPaymentRequestPaymentsv2.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPaymentRequestPaymentsv2.Responses.$200>
@@ -8833,7 +8833,7 @@ export interface OperationMethods {
    * 
    */
   'getPaymentRequestReportV2'(
-    parameters: Parameters<Paths.GetPaymentRequestReportV2.PathParameters>,
+    parameters?: Parameters<Paths.GetPaymentRequestReportV2.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPaymentRequestReportV2.Responses.$200>
@@ -8854,7 +8854,7 @@ export interface OperationMethods {
    * Returns an object of payment request information
    */
   'GetPublicPaymentRequestV2'(
-    parameters: Parameters<Paths.GetPublicPaymentRequestV2.PathParameters>,
+    parameters?: Parameters<Paths.GetPublicPaymentRequestV2.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPublicPaymentRequestV2.Responses.$200>
@@ -8865,7 +8865,7 @@ export interface OperationMethods {
    * 
    */
   'getPayeeAccountInfo'(
-    parameters: Parameters<Paths.GetPayeeAccountInfo.PathParameters>,
+    parameters?: Parameters<Paths.GetPayeeAccountInfo.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPayeeAccountInfo.Responses.$200>
@@ -8876,7 +8876,7 @@ export interface OperationMethods {
    * 
    */
   'getPayeeTransactionInfo'(
-    parameters: Parameters<Paths.GetPayeeTransactionInfo.PathParameters>,
+    parameters?: Parameters<Paths.GetPayeeTransactionInfo.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPayeeTransactionInfo.Responses.$200>
@@ -8886,7 +8886,7 @@ export interface OperationMethods {
    * Get all permissions allowed for a specific API application on your fire.com account
    */
   'GetPermissions'(
-    parameters: Parameters<Paths.GetPermissions.PathParameters>,
+    parameters?: Parameters<Paths.GetPermissions.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPermissions.Responses.$200>
@@ -8906,7 +8906,7 @@ export interface OperationMethods {
    * Return exchange rate between two currencies
    */
   'GetFXRates'(
-    parameters: Parameters<Paths.GetFXRates.PathParameters>,
+    parameters?: Parameters<Paths.GetFXRates.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetFXRates.Responses.$200>
@@ -8926,7 +8926,7 @@ export interface OperationMethods {
    * Changes the name associated with an account
    */
   'changeAccountConfig'(
-    parameters: Parameters<Paths.ChangeAccountConfig.PathParameters>,
+    parameters?: Parameters<Paths.ChangeAccountConfig.PathParameters> | null,
     data?: Paths.ChangeAccountConfig.RequestBody,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.ChangeAccountConfig.Responses.$204>
@@ -8947,7 +8947,7 @@ export interface OperationMethods {
    * 
    */
   'getNewPayeeBatch'(
-    parameters: Parameters<Paths.GetNewPayeeBatch.PathParameters>,
+    parameters?: Parameters<Paths.GetNewPayeeBatch.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetNewPayeeBatch.Responses.$200>
@@ -8970,7 +8970,7 @@ export interface OperationMethods {
    * 
    */
   'getPaymentDetails'(
-    parameters: Parameters<Paths.GetPaymentDetails.PathParameters>,
+    parameters?: Parameters<Paths.GetPaymentDetails.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPaymentDetails.Responses.$200>
@@ -8996,7 +8996,7 @@ export interface OperationMethods {
    * 
    */
   'getPaymentDetailsv2'(
-    parameters: Parameters<Paths.GetPaymentDetailsv2.PathParameters>,
+    parameters?: Parameters<Paths.GetPaymentDetailsv2.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetPaymentDetailsv2.Responses.$200>
@@ -9028,7 +9028,7 @@ export interface OperationMethods {
    * You can retrieve the details of a specific fire.com user
    */
   'getUser'(
-    parameters: Parameters<Paths.GetUser.PathParameters>,
+    parameters?: Parameters<Paths.GetUser.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetUser.Responses.$200>
@@ -9077,7 +9077,7 @@ export interface OperationMethods {
    * 
    */
   'getDirectDebitByUuid'(
-    parameters: Parameters<Paths.GetDirectDebitByUuid.PathParameters>,
+    parameters?: Parameters<Paths.GetDirectDebitByUuid.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetDirectDebitByUuid.Responses.$200>
@@ -9089,7 +9089,7 @@ export interface OperationMethods {
    * 
    */
   'rejectDirectDebit'(
-    parameters: Parameters<Paths.RejectDirectDebit.PathParameters>,
+    parameters?: Parameters<Paths.RejectDirectDebit.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.RejectDirectDebit.Responses.$204>
@@ -9112,7 +9112,7 @@ export interface OperationMethods {
    * 
    */
   'getMandate'(
-    parameters: Parameters<Paths.GetMandate.PathParameters>,
+    parameters?: Parameters<Paths.GetMandate.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetMandate.Responses.$200>
@@ -9124,7 +9124,7 @@ export interface OperationMethods {
    * 
    */
   'updateMandateAlias'(
-    parameters: Parameters<Paths.UpdateMandateAlias.PathParameters>,
+    parameters?: Parameters<Paths.UpdateMandateAlias.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.UpdateMandateAlias.Responses.$204>
@@ -9136,7 +9136,7 @@ export interface OperationMethods {
    * 
    */
   'cancelMandateByUuid'(
-    parameters: Parameters<Paths.CancelMandateByUuid.PathParameters>,
+    parameters?: Parameters<Paths.CancelMandateByUuid.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.CancelMandateByUuid.Responses.$204>
@@ -9148,7 +9148,7 @@ export interface OperationMethods {
    * 
    */
   'activateMandate'(
-    parameters: Parameters<Paths.ActivateMandate.PathParameters>,
+    parameters?: Parameters<Paths.ActivateMandate.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.ActivateMandate.Responses.$204>
@@ -9180,7 +9180,7 @@ export interface OperationMethods {
    * Returns a paginated list of items in the specified batch.
    */
   'getItemsBatchInternalTrasnfer'(
-    parameters: Parameters<Paths.GetItemsBatchInternalTrasnfer.QueryParameters & Paths.GetItemsBatchInternalTrasnfer.PathParameters>,
+    parameters?: Parameters<Paths.GetItemsBatchInternalTrasnfer.QueryParameters & Paths.GetItemsBatchInternalTrasnfer.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetItemsBatchInternalTrasnfer.Responses.$200>
@@ -9190,7 +9190,7 @@ export interface OperationMethods {
    * Simply specify the source account, destination account, amount and a reference.
    */
   'addInternalTransferBatchPayment'(
-    parameters: Parameters<Paths.AddInternalTransferBatchPayment.PathParameters>,
+    parameters?: Parameters<Paths.AddInternalTransferBatchPayment.PathParameters> | null,
     data?: Paths.AddInternalTransferBatchPayment.RequestBody,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.AddInternalTransferBatchPayment.Responses.$200>
@@ -9200,7 +9200,7 @@ export interface OperationMethods {
    * Returns a paginated list of items in the specified batch.
    */
   'getItemsBatchBankTransfer'(
-    parameters: Parameters<Paths.GetItemsBatchBankTransfer.QueryParameters & Paths.GetItemsBatchBankTransfer.PathParameters>,
+    parameters?: Parameters<Paths.GetItemsBatchBankTransfer.QueryParameters & Paths.GetItemsBatchBankTransfer.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetItemsBatchBankTransfer.Responses.$200>
@@ -9215,7 +9215,7 @@ export interface OperationMethods {
    * 
    */
   'addBankTransferBatchPayment'(
-    parameters: Parameters<Paths.AddBankTransferBatchPayment.PathParameters>,
+    parameters?: Parameters<Paths.AddBankTransferBatchPayment.PathParameters> | null,
     data?: Paths.AddBankTransferBatchPayment.RequestBody,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.AddBankTransferBatchPayment.Responses.$200>
@@ -9225,7 +9225,7 @@ export interface OperationMethods {
    * Returns a paginated list of items in the specified batch.
    */
   'getItemsBatchInternationalTransfer'(
-    parameters: Parameters<Paths.GetItemsBatchInternationalTransfer.QueryParameters & Paths.GetItemsBatchInternationalTransfer.PathParameters>,
+    parameters?: Parameters<Paths.GetItemsBatchInternationalTransfer.QueryParameters & Paths.GetItemsBatchInternationalTransfer.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetItemsBatchInternationalTransfer.Responses.$200>
@@ -9238,7 +9238,7 @@ export interface OperationMethods {
    * 
    */
   'addInternationalTransferBatchPayment'(
-    parameters: Parameters<Paths.AddInternationalTransferBatchPayment.PathParameters>,
+    parameters?: Parameters<Paths.AddInternationalTransferBatchPayment.PathParameters> | null,
     data?: Paths.AddInternationalTransferBatchPayment.RequestBody,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.AddInternationalTransferBatchPayment.Responses.$200>
@@ -9248,7 +9248,7 @@ export interface OperationMethods {
    * Removes a Payment from the Batch (Internal Transfer). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
    */
   'deleteInternalTransferBatchPayment'(
-    parameters: Parameters<Paths.DeleteInternalTransferBatchPayment.PathParameters>,
+    parameters?: Parameters<Paths.DeleteInternalTransferBatchPayment.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.DeleteInternalTransferBatchPayment.Responses.$200>
@@ -9258,7 +9258,7 @@ export interface OperationMethods {
    * Removes a Payment from the Batch (Bank Transfers). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
    */
   'deleteBankTransferBatchPayment'(
-    parameters: Parameters<Paths.DeleteBankTransferBatchPayment.PathParameters>,
+    parameters?: Parameters<Paths.DeleteBankTransferBatchPayment.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.DeleteBankTransferBatchPayment.Responses.$200>
@@ -9268,7 +9268,7 @@ export interface OperationMethods {
    * Removes a Payment from the Batch (International Transfers). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
    */
   'deleteInternationalTransferBatchPayment'(
-    parameters: Parameters<Paths.DeleteInternationalTransferBatchPayment.PathParameters>,
+    parameters?: Parameters<Paths.DeleteInternationalTransferBatchPayment.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.DeleteInternationalTransferBatchPayment.Responses.$200>
@@ -9278,7 +9278,7 @@ export interface OperationMethods {
    * Returns the details of the batch specified in the API endpoint - {batchUuid}.
    */
   'getDetailsSingleBatch'(
-    parameters: Parameters<Paths.GetDetailsSingleBatch.PathParameters>,
+    parameters?: Parameters<Paths.GetDetailsSingleBatch.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetDetailsSingleBatch.Responses.$200>
@@ -9291,7 +9291,7 @@ export interface OperationMethods {
    * 
    */
   'submitBatch'(
-    parameters: Parameters<Paths.SubmitBatch.PathParameters>,
+    parameters?: Parameters<Paths.SubmitBatch.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.SubmitBatch.Responses.$204>
@@ -9301,7 +9301,7 @@ export interface OperationMethods {
    * Cancels the Batch. You can only cancel a batch before it is submitted for approval (while it is in the OPEN state).
    */
   'cancelBatchPayment'(
-    parameters: Parameters<Paths.CancelBatchPayment.PathParameters>,
+    parameters?: Parameters<Paths.CancelBatchPayment.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.CancelBatchPayment.Responses.$200>
@@ -9311,7 +9311,7 @@ export interface OperationMethods {
    * Returns a list of approvers for this batch.
    */
   'getListofApproversForBatch'(
-    parameters: Parameters<Paths.GetListofApproversForBatch.PathParameters>,
+    parameters?: Parameters<Paths.GetListofApproversForBatch.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetListofApproversForBatch.Responses.$200>
@@ -9331,7 +9331,7 @@ export interface OperationMethods {
    * You can retrieve the address of a specific fire.com user
    */
   'getUser'(
-    parameters: Parameters<Paths.GetUser.PathParameters>,
+    parameters?: Parameters<Paths.GetUser.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.GetUser.Responses.$200>
@@ -9352,7 +9352,7 @@ export interface OperationMethods {
    * 
    */
   'updatePaymentRequests'(
-    parameters: Parameters<Paths.UpdatePaymentRequests.PathParameters>,
+    parameters?: Parameters<Paths.UpdatePaymentRequests.PathParameters> | null,
     data?: any,
     config?: AxiosRequestConfig  
   ): OperationResponse<Paths.UpdatePaymentRequests.Responses.$204>
@@ -9415,7 +9415,7 @@ export interface PathsDictionary {
      * You can retrieve the details of a fire.com Account by its `ican`.
      */
     'get'(
-      parameters: Parameters<Paths.GetAccountById.PathParameters>,
+      parameters?: Parameters<Paths.GetAccountById.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetAccountById.Responses.$200>
@@ -9427,7 +9427,7 @@ export interface PathsDictionary {
      * Retrieve a list of transactions against an account. Recommended to use the v3 endpoint instead.
      */
     'get'(
-      parameters: Parameters<Paths.GetTransactionsByAccountIdv1.QueryParameters & Paths.GetTransactionsByAccountIdv1.PathParameters>,
+      parameters?: Parameters<Paths.GetTransactionsByAccountIdv1.QueryParameters & Paths.GetTransactionsByAccountIdv1.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetTransactionsByAccountIdv1.Responses.$200>
@@ -9440,7 +9440,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetTransactionsByAccountIdv3.QueryParameters & Paths.GetTransactionsByAccountIdv3.PathParameters>,
+      parameters?: Parameters<Paths.GetTransactionsByAccountIdv3.QueryParameters & Paths.GetTransactionsByAccountIdv3.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetTransactionsByAccountIdv3.Responses.$200>
@@ -9459,7 +9459,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetTransactionsByAccountIdFiltered.QueryParameters & Paths.GetTransactionsByAccountIdFiltered.PathParameters>,
+      parameters?: Parameters<Paths.GetTransactionsByAccountIdFiltered.QueryParameters & Paths.GetTransactionsByAccountIdFiltered.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetTransactionsByAccountIdFiltered.Responses.$200>
@@ -9493,7 +9493,7 @@ export interface PathsDictionary {
      * Returns a list of cards transactions related to your fire.com card.
      */
     'get'(
-      parameters: Parameters<Paths.GetListofCardTransactions.QueryParameters & Paths.GetListofCardTransactions.PathParameters>,
+      parameters?: Parameters<Paths.GetListofCardTransactions.QueryParameters & Paths.GetListofCardTransactions.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetListofCardTransactions.Responses.$200>
@@ -9505,7 +9505,7 @@ export interface PathsDictionary {
      * Updates status of an existing card to block which prevents any transactions being carried out with that card.
      */
     'post'(
-      parameters: Parameters<Paths.BlockCard.PathParameters>,
+      parameters?: Parameters<Paths.BlockCard.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.BlockCard.Responses.$204>
@@ -9517,7 +9517,7 @@ export interface PathsDictionary {
      * Updates status of an existing card to unblock which means that transactions can be carried out with that card.
      */
     'post'(
-      parameters: Parameters<Paths.UnblockCard.PathParameters>,
+      parameters?: Parameters<Paths.UnblockCard.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.UnblockCard.Responses.$204>
@@ -9543,7 +9543,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPaymentRequestDetails.PathParameters>,
+      parameters?: Parameters<Paths.GetPaymentRequestDetails.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPaymentRequestDetails.Responses.$200>
@@ -9556,7 +9556,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPaymentRequestPayments.PathParameters>,
+      parameters?: Parameters<Paths.GetPaymentRequestPayments.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPaymentRequestPayments.Responses.$200>
@@ -9569,7 +9569,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPaymentRequestPaymentsv2.PathParameters>,
+      parameters?: Parameters<Paths.GetPaymentRequestPaymentsv2.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPaymentRequestPaymentsv2.Responses.$200>
@@ -9582,7 +9582,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPaymentRequestReportV2.PathParameters>,
+      parameters?: Parameters<Paths.GetPaymentRequestReportV2.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPaymentRequestReportV2.Responses.$200>
@@ -9607,7 +9607,7 @@ export interface PathsDictionary {
      * Returns an object of payment request information
      */
     'get'(
-      parameters: Parameters<Paths.GetPublicPaymentRequestV2.PathParameters>,
+      parameters?: Parameters<Paths.GetPublicPaymentRequestV2.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPublicPaymentRequestV2.Responses.$200>
@@ -9620,7 +9620,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPayeeAccountInfo.PathParameters>,
+      parameters?: Parameters<Paths.GetPayeeAccountInfo.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPayeeAccountInfo.Responses.$200>
@@ -9633,7 +9633,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPayeeTransactionInfo.PathParameters>,
+      parameters?: Parameters<Paths.GetPayeeTransactionInfo.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPayeeTransactionInfo.Responses.$200>
@@ -9645,7 +9645,7 @@ export interface PathsDictionary {
      * Get all permissions allowed for a specific API application on your fire.com account
      */
     'get'(
-      parameters: Parameters<Paths.GetPermissions.PathParameters>,
+      parameters?: Parameters<Paths.GetPermissions.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPermissions.Responses.$200>
@@ -9669,7 +9669,7 @@ export interface PathsDictionary {
      * Return exchange rate between two currencies
      */
     'get'(
-      parameters: Parameters<Paths.GetFXRates.PathParameters>,
+      parameters?: Parameters<Paths.GetFXRates.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetFXRates.Responses.$200>
@@ -9693,7 +9693,7 @@ export interface PathsDictionary {
      * Changes the name associated with an account
      */
     'put'(
-      parameters: Parameters<Paths.ChangeAccountConfig.PathParameters>,
+      parameters?: Parameters<Paths.ChangeAccountConfig.PathParameters> | null,
       data?: Paths.ChangeAccountConfig.RequestBody,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.ChangeAccountConfig.Responses.$204>
@@ -9718,7 +9718,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetNewPayeeBatch.PathParameters>,
+      parameters?: Parameters<Paths.GetNewPayeeBatch.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetNewPayeeBatch.Responses.$200>
@@ -9743,7 +9743,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPaymentDetails.PathParameters>,
+      parameters?: Parameters<Paths.GetPaymentDetails.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPaymentDetails.Responses.$200>
@@ -9771,7 +9771,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetPaymentDetailsv2.PathParameters>,
+      parameters?: Parameters<Paths.GetPaymentDetailsv2.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetPaymentDetailsv2.Responses.$200>
@@ -9809,7 +9809,7 @@ export interface PathsDictionary {
      * You can retrieve the details of a specific fire.com user
      */
     'get'(
-      parameters: Parameters<Paths.GetUser.PathParameters>,
+      parameters?: Parameters<Paths.GetUser.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetUser.Responses.$200>
@@ -9866,7 +9866,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetDirectDebitByUuid.PathParameters>,
+      parameters?: Parameters<Paths.GetDirectDebitByUuid.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetDirectDebitByUuid.Responses.$200>
@@ -9880,7 +9880,7 @@ export interface PathsDictionary {
      * 
      */
     'post'(
-      parameters: Parameters<Paths.RejectDirectDebit.PathParameters>,
+      parameters?: Parameters<Paths.RejectDirectDebit.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.RejectDirectDebit.Responses.$204>
@@ -9907,7 +9907,7 @@ export interface PathsDictionary {
      * 
      */
     'get'(
-      parameters: Parameters<Paths.GetMandate.PathParameters>,
+      parameters?: Parameters<Paths.GetMandate.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetMandate.Responses.$200>
@@ -9919,7 +9919,7 @@ export interface PathsDictionary {
      * 
      */
     'post'(
-      parameters: Parameters<Paths.UpdateMandateAlias.PathParameters>,
+      parameters?: Parameters<Paths.UpdateMandateAlias.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.UpdateMandateAlias.Responses.$204>
@@ -9933,7 +9933,7 @@ export interface PathsDictionary {
      * 
      */
     'post'(
-      parameters: Parameters<Paths.CancelMandateByUuid.PathParameters>,
+      parameters?: Parameters<Paths.CancelMandateByUuid.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.CancelMandateByUuid.Responses.$204>
@@ -9947,7 +9947,7 @@ export interface PathsDictionary {
      * 
      */
     'post'(
-      parameters: Parameters<Paths.ActivateMandate.PathParameters>,
+      parameters?: Parameters<Paths.ActivateMandate.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.ActivateMandate.Responses.$204>
@@ -9983,7 +9983,7 @@ export interface PathsDictionary {
      * Simply specify the source account, destination account, amount and a reference.
      */
     'post'(
-      parameters: Parameters<Paths.AddInternalTransferBatchPayment.PathParameters>,
+      parameters?: Parameters<Paths.AddInternalTransferBatchPayment.PathParameters> | null,
       data?: Paths.AddInternalTransferBatchPayment.RequestBody,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.AddInternalTransferBatchPayment.Responses.$200>
@@ -9993,7 +9993,7 @@ export interface PathsDictionary {
      * Returns a paginated list of items in the specified batch.
      */
     'get'(
-      parameters: Parameters<Paths.GetItemsBatchInternalTrasnfer.QueryParameters & Paths.GetItemsBatchInternalTrasnfer.PathParameters>,
+      parameters?: Parameters<Paths.GetItemsBatchInternalTrasnfer.QueryParameters & Paths.GetItemsBatchInternalTrasnfer.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetItemsBatchInternalTrasnfer.Responses.$200>
@@ -10010,7 +10010,7 @@ export interface PathsDictionary {
      * 
      */
     'post'(
-      parameters: Parameters<Paths.AddBankTransferBatchPayment.PathParameters>,
+      parameters?: Parameters<Paths.AddBankTransferBatchPayment.PathParameters> | null,
       data?: Paths.AddBankTransferBatchPayment.RequestBody,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.AddBankTransferBatchPayment.Responses.$200>
@@ -10020,7 +10020,7 @@ export interface PathsDictionary {
      * Returns a paginated list of items in the specified batch.
      */
     'get'(
-      parameters: Parameters<Paths.GetItemsBatchBankTransfer.QueryParameters & Paths.GetItemsBatchBankTransfer.PathParameters>,
+      parameters?: Parameters<Paths.GetItemsBatchBankTransfer.QueryParameters & Paths.GetItemsBatchBankTransfer.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetItemsBatchBankTransfer.Responses.$200>
@@ -10035,7 +10035,7 @@ export interface PathsDictionary {
      * 
      */
     'post'(
-      parameters: Parameters<Paths.AddInternationalTransferBatchPayment.PathParameters>,
+      parameters?: Parameters<Paths.AddInternationalTransferBatchPayment.PathParameters> | null,
       data?: Paths.AddInternationalTransferBatchPayment.RequestBody,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.AddInternationalTransferBatchPayment.Responses.$200>
@@ -10045,7 +10045,7 @@ export interface PathsDictionary {
      * Returns a paginated list of items in the specified batch.
      */
     'get'(
-      parameters: Parameters<Paths.GetItemsBatchInternationalTransfer.QueryParameters & Paths.GetItemsBatchInternationalTransfer.PathParameters>,
+      parameters?: Parameters<Paths.GetItemsBatchInternationalTransfer.QueryParameters & Paths.GetItemsBatchInternationalTransfer.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetItemsBatchInternationalTransfer.Responses.$200>
@@ -10057,7 +10057,7 @@ export interface PathsDictionary {
      * Removes a Payment from the Batch (Internal Transfer). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
      */
     'delete'(
-      parameters: Parameters<Paths.DeleteInternalTransferBatchPayment.PathParameters>,
+      parameters?: Parameters<Paths.DeleteInternalTransferBatchPayment.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.DeleteInternalTransferBatchPayment.Responses.$200>
@@ -10069,7 +10069,7 @@ export interface PathsDictionary {
      * Removes a Payment from the Batch (Bank Transfers). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
      */
     'delete'(
-      parameters: Parameters<Paths.DeleteBankTransferBatchPayment.PathParameters>,
+      parameters?: Parameters<Paths.DeleteBankTransferBatchPayment.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.DeleteBankTransferBatchPayment.Responses.$200>
@@ -10081,7 +10081,7 @@ export interface PathsDictionary {
      * Removes a Payment from the Batch (International Transfers). You can only remove payments before the batch is submitted for approval (while it is in the OPEN state).
      */
     'delete'(
-      parameters: Parameters<Paths.DeleteInternationalTransferBatchPayment.PathParameters>,
+      parameters?: Parameters<Paths.DeleteInternationalTransferBatchPayment.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.DeleteInternationalTransferBatchPayment.Responses.$200>
@@ -10093,7 +10093,7 @@ export interface PathsDictionary {
      * Cancels the Batch. You can only cancel a batch before it is submitted for approval (while it is in the OPEN state).
      */
     'delete'(
-      parameters: Parameters<Paths.CancelBatchPayment.PathParameters>,
+      parameters?: Parameters<Paths.CancelBatchPayment.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.CancelBatchPayment.Responses.$200>
@@ -10103,7 +10103,7 @@ export interface PathsDictionary {
      * Returns the details of the batch specified in the API endpoint - {batchUuid}.
      */
     'get'(
-      parameters: Parameters<Paths.GetDetailsSingleBatch.PathParameters>,
+      parameters?: Parameters<Paths.GetDetailsSingleBatch.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetDetailsSingleBatch.Responses.$200>
@@ -10116,7 +10116,7 @@ export interface PathsDictionary {
      * 
      */
     'put'(
-      parameters: Parameters<Paths.SubmitBatch.PathParameters>,
+      parameters?: Parameters<Paths.SubmitBatch.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.SubmitBatch.Responses.$204>
@@ -10128,7 +10128,7 @@ export interface PathsDictionary {
      * Returns a list of approvers for this batch.
      */
     'get'(
-      parameters: Parameters<Paths.GetListofApproversForBatch.PathParameters>,
+      parameters?: Parameters<Paths.GetListofApproversForBatch.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetListofApproversForBatch.Responses.$200>
@@ -10152,7 +10152,7 @@ export interface PathsDictionary {
      * You can retrieve the address of a specific fire.com user
      */
     'get'(
-      parameters: Parameters<Paths.GetUser.PathParameters>,
+      parameters?: Parameters<Paths.GetUser.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.GetUser.Responses.$200>
@@ -10177,7 +10177,7 @@ export interface PathsDictionary {
      * 
      */
     'put'(
-      parameters: Parameters<Paths.UpdatePaymentRequests.PathParameters>,
+      parameters?: Parameters<Paths.UpdatePaymentRequests.PathParameters> | null,
       data?: any,
       config?: AxiosRequestConfig  
     ): OperationResponse<Paths.UpdatePaymentRequests.Responses.$204>

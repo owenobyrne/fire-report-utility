@@ -89,8 +89,8 @@ const createWindow = (): void => {
 const template : MenuItemConstructorOptions[] = [{
   label: "Fire Report Utility",
   submenu: [
-      { label: "Copy", accelerator: "CmdOrCtrl+C" },
-      { label: "Paste", accelerator: "CmdOrCtrl+V" },
+      { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+      { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
       { type: "separator" },
       { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
     ]}

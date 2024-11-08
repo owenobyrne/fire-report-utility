@@ -9250,6 +9250,547 @@ components:
       schema:
         type: integer
         default: 0
+  schemas:
+    Account:
+      title: Account
+      type: object
+      properties:
+        ican:
+          type: integer
+          format: int64
+          description: identifier for the fire.com account (assigned by fire.com)
+          example: 42
+        name:
+          type: string
+          description: the name the user gives to the account to help them identify it.
+          example: Main Account
+        colour:
+          type: string
+          description: Internal Use
+          deprecated: true
+          example: ORANGE
+        currency:
+          title: currency
+          description: The currency.
+          type: object
+          properties:
+            code:
+              type: string
+              description: The three letter code for the currency.
+              example: EUR
+            description:
+              type: string
+              description: The name of the currency
+              example: Euro
+        balance:
+          type: integer
+          format: int64
+          description: >-
+            the balance of the account (in minor currency units - pence, cent
+            etc. 434050 == 4,340.50 GBP for a GBP account).
+          example: 23950
+        status:
+          type: string
+          enum:
+            - LIVE
+            - BREXIT_MIGRATED
+          description: >-
+            Live accounts can be used as normal. Migrated accounts were used
+            before Brexit and are read-only.
+        cbic:
+          type: string
+          example: CPAYIE2D
+          description: the BIC of the account (provided if currency is EUR).
+        ciban:
+          type: string
+          example: IE54CPAY99119911111111
+          description: the IBAN of the account (provided if currency is EUR).
+        cnsc:
+          type: string
+          example: '232221'
+          description: the Sort Code of the account.
+        ccan:
+          type: string
+          example: '11111111'
+          description: the Account Number of the account.
+        defaultAccount:
+          type: boolean
+          example: true
+          description: >-
+            true if this is the default account for this currency. This will be
+            the account that general fees are taken from (as opposed to
+            per-transaction fees).
+        directDebitsAllowed:
+          type: boolean
+          example: false
+          description: Whether or not direct debits can be set up on this account.
+        fopOnly:
+          type: boolean
+          example: false
+          description: >-
+            Indicates that this account is for collecting Fire Open Payments
+            only. All other payments to this account will be returned.
+    Transaction:
+      title: transaction
+      type: object
+      properties:
+        txnId:
+          type: integer
+          format: int64
+          description: >-
+            The id of this side of the transaction (each transaction has two
+            sides - a to and a from). This is used to get the details of the
+            transaction.
+          example: 30157
+        refId:
+          type: integer
+          format: int64
+          description: The id of the transaction.
+          example: 26774
+        ican:
+          type: integer
+          format: int64
+          description: >-
+            identifier for the fire.com account (assigned by fire.com) This
+            field is only used in the condensed version.
+          example: 1951
+        currency:
+          title: currency
+          description: The currency.
+          type: object
+          properties:
+            code:
+              type: string
+              description: The three letter code for the currency.
+              example: EUR
+            description:
+              type: string
+              description: The name of the currency
+              example: Euro
+        amountBeforeCharges:
+          type: integer
+          format: int64
+          description: Amount of the transaction before the fees and taxes were applied.
+          example: 5000
+        feeAmount:
+          type: integer
+          format: int64
+          description: 'The amount of the fee, if any.'
+          example: 0
+        taxAmount:
+          type: integer
+          format: int64
+          description: 'The amount of the tax, if any (e.g. Stamp duty for ATM transactions)'
+          example: 0
+        amountAfterCharges:
+          type: integer
+          format: int64
+          description: >-
+            Net amount lodged or taken from the account after fees and charges
+            were applied.
+          example: 5000
+        balance:
+          type: integer
+          format: int64
+          description: >-
+            the balance of the account (in minor currency units - pence, cent
+            etc. 434050 == 4,340.50 GBP for a GBP account).
+          example: 8500
+        myRef:
+          type: string
+          description: The comment/reference on the transaction
+          example: Transfer to main account
+        yourRef:
+          type: string
+          description: >-
+            The comment/reference on the transaction that appears on the
+            recipients statement. Only for withdrawals
+          example: From John Smith
+        date:
+          type: string
+          format: date-time
+          description: Date of the transaction
+          example: 2021-04-13T11:06:32.437Z
+        paymentRequestPublicCode:
+          type: string
+          description: >-
+            (FOP payments only) The FOP Payment Code that was used to make this
+            payment.
+          example: 1abcdefg
+        card:
+          title: relatedCard
+          description: Details of the card used (if applicable)
+          type: object
+          properties:
+            cardId:
+              type: integer
+              format: int64
+            provider:
+              type: string
+            alias:
+              type: string
+            maskedPan:
+              type: string
+            embossCardName:
+              type: string
+            embossBusinessName:
+              type: string
+            expiryDate:
+              type: string
+              format: date-time
+        type:
+          type: string
+          description: "The type of the transaction:\n* `LODGEMENT` - Bank Transfer received\n* `PIS_LODGEMENT` - Fire Open Payments Lodgement received\n* `MANUAL_TRANSFER` - Manual Transfer to\n* `WITHDRAWAL` - Bank Transfer sent\n* `REVERSAL` - Credit Reversal\n* `DIRECT_DEBIT` - A direct debit.\n* `DIRECT_DEBIT_REPRESENTED` - A Direct Debit that was requested again after initially failing.\n* `DIRECT_DEBIT_REFUND` - A refund of a Direct debit.\n* `INTERNAL_TRANSFER_TO` - Internal Transfer sent (between two of my accounts of the same currency)\n* `INTERNAL_TRANSFER_FROM` - Internal Transfer received (between two of my accounts of the same currency)\n* `WITHDRAWAL_RETURNED` - Bank Transfer sent returned\n* `LODGEMENT_REVERSED` - Bank Transfer received returned\n* `FX_INTERNAL_TRANSFER_FROM` - FX Internal Transfer received (between two of my accounts of different currency)\n* `FX_INTERNAL_TRANSFER_TO` - FX Internal Transfer sent (between two of my accounts of different currency)\n* `CREATE_CARD` - The fee taken when a debit card is issued.\n* `ADD_ACCOUNT` - The fee taken when an account is created.\n* `CREATE_ADDITIONAL_USER` - The fee taken when an additional user is created.       \n* `CARD_POS_CONTACT_DEBIT` - Card used in store; read by magnetic stripe or pin\n* `CARD_POS_CONTACT_CREDIT` - Card used in store; read by magnetic stripe or pin\n* `CARD_POS_CONTACTLESS_DEBIT` - Card used in store; read by NFC\n* `CARD_POS_CONTACTLESS_CREDIT` - Card used in store; read by NFC\n* `CARD_ECOMMERCE_DEBIT` - Card used on the internet\n* `CARD_ECOMMERCE_CREDIT` - Card used on the internet\n* `CARD_ATM_DEBIT` - Card used in an ATM\n* `CARD_ATM_CREDIT` - Card used in an ATM\n* `CARD_INTERNATIONAL_POS_CONTACT_DEBIT` - Card used in store in non-processing currency; read by magnetic stripe or pin\n* `CARD_INTERNATIONAL_POS_CONTACT_CREDIT` - Card used in store in non-processing currency; read by magnetic stripe or pin\n* `CARD_INTERNATIONAL_POS_CONTACTLESS_DEBIT` - Card used in store in non-processing currency; read by NFC\n* `CARD_INTERNATIONAL_POS_CONTACTLESS_CREDIT` - Card used in store in non-processing currency; read by NFC\n* `CARD_INTERNATIONAL_ECOMMERCE_DEBIT\t` - Card used on the internet in non-processing currency\n* `CARD_INTERNATIONAL_ECOMMERCE_CREDIT` - Card used on the internet in non-processing currency\n* `CARD_INTERNATIONAL_ATM_DEBIT` - Card used in an ATM in non-processing currency\n* `CARD_INTERNATIONAL_ATM_CREDIT` - Card used in an ATM in non-processing currency\n* `CARD_POS_CONTACT_DEBIT_REVERSAL` - Card used in store; read by magnetic stripe or pin - reversed\n* `CARD_POS_CONTACT_CREDIT_REVERSAL` - Card used in store; read by magnetic stripe or pin - reversed\n* `CARD_POS_CONTACTLESS_DEBIT_REVERSAL` - Card used in store; read by NFC - reversed\n* `CARD_POS_CONTACTLESS_CREDIT_REVERSAL` - Card used in store; read by NFC - reversed\n* `CARD_ECOMMERCE_DEBIT_REVERSAL\t` - Card used on the internet - reversed\n* `CARD_ECOMMERCE_CREDIT_REVERSAL` - Card used on the internet - reversed\n* `CARD_ATM_DEBIT_REVERSAL` - Card used in an ATM - reversed\n* `CARD_ATM_CREDIT_REVERSAL` - Card used in an ATM - reversed\n* `CARD_INTERNATIONAL_POS_CONTACT_DEBIT_REVERSAL` - Card used in store in non-processing currency; read by magnetic stripe or pin - reversed\n* `CARD_INTERNATIONAL_POS_CONTACT_CREDIT_REVERSAL` - Card used in store in non-processing currency; read by magnetic stripe or pin - reversed\n* `CARD_INTERNATIONAL_POS_CONTACTLESS_DEBIT_REVERSAL` - Card used in store in non-processing currency; read by NFC - reversed\n* `CARD_INTERNATIONAL_POS_CONTACTLESS_CREDIT_REVERSAL` - One or more of the transaction types above. This field can be repeated multiple times to allow for multiple transaction types.\n* `CARD_INTERNATIONAL_ECOMMERCE_DEBIT_REVERSAL` - Card used in store in non-processing currency; read by NFC - reversed\n* `CARD_INTERNATIONAL_ECOMMERCE_CREDIT_REVERSAL` - Card used in store in non-processing currency; read by NFC - reversed\n* `CARD_INTERNATIONAL_ATM_DEBIT_REVERSAL` - Card used on the internet in non-processing currency - reversed\n* `CARD_INTERNATIONAL_ATM_CREDIT_REVERSAL` - Card used on the internet in non-processing currency - reversed\n"
+          example: WITHDRAWAL
+        dateAcknowledged:
+          type: string
+          format: date-time
+          example: 2021-04-13T11:06:32.437Z
+        fxTradeDetails:
+          title: fxTrade
+          description: Details of the FX trade (if applicable)
+          type: object
+          properties:
+            buyCurrency:
+              type: string
+              description: currency which is being bought
+              example: GBP
+            sellCurrency:
+              type: string
+              example: EUR
+              description: currency which is being sold
+            fixedSide:
+              type: string
+              description: type of trade - BUY or SELL
+              example: SELL
+            buyAmount:
+              type: integer
+              format: int64
+              description: amount of buyCurrency being bought
+              example: 359
+            sellAmount:
+              type: integer
+              format: int64
+              description: amount of sellCurrency being sold
+              example: 500
+            rate4d:
+              type: integer
+              format: int64
+              description: exchange rate
+              example: 7180
+            provider:
+              type: string
+              example: TCC
+              description: The FX provider used to make the trade.
+        batchItemDetails:
+          title: batchItemDetails
+          description: Details of the batch run if this transaction was part of a batch.
+          type: object
+          properties:
+            batchPublicUuid:
+              type: string
+              example: F2AF3F2B-4406-4199-B249-B354F2CC6019
+              description: The UUID for this batch.
+            batchItemPublicUuid:
+              type: string
+              example: F2AF3F2B-4406-4199-B249-B354F2CC6019
+              description: The UUID for this item in the batch.
+            batchName:
+              type: string
+              example: Payroll 2022-11
+              description: The optional name given to the batch at creation time.
+            jobNumber:
+              type: string
+              example: 2018-01-PR
+              description: >-
+                The optional job number given to the batch to link it to your
+                own system.
+        directDebitDetails:
+          title: directDebitDetails
+          description: Details of the direct debit (if applicable)
+          type: object
+          properties:
+            directDebitUuid:
+              type: string
+              description: The UUID for the direct debit payment
+              example: 42de0705-e3f1-44fa-8c41-79973eb80eb2
+            mandateUUid:
+              type: string
+              description: The UUID for the mandate
+              example: f171b143-e3eb-47de-85a6-1c1f1108c701
+            originatorReference:
+              type: string
+              description: Set by party who sets up the direct debit.
+              example: VODA-123456
+            originatorName:
+              type: string
+              description: The creator of the party who sets up the direct debit.
+              example: Vodafone PLC
+            originatorAlias:
+              type: string
+              description: The Alias of the party who sets up the direct debit.
+              example: Three
+            directDebitReference:
+              type: string
+              description: The direct debit reference.
+              example: VODA-ABC453-1
+            originatorLogoUrlSmall:
+              type: string
+              description: >-
+                URL pointing to a small version of the Originator Logo (if
+                available)
+              example: >-
+                https://s3-eu-west-1.amazonaws.com/live-fire-assets/prod/49dc9a01-8261-4d98-bebf-c3842c2d3c5d-small.png
+            originatorLogoUrlLarge:
+              type: string
+              description: >-
+                URL pointing to a large version of the Originator Logo (if
+                available)
+              example: >-
+                https://s3-eu-west-1.amazonaws.com/live-fire-assets/prod/49dc9a01-8261-4d98-bebf-c3842c2d3c5d-small.png
+            mandateReference:
+              type: string
+              example: CRZ-102190123
+              description: the reference of the mandate
+            mandateUuid:
+              type: string
+              description: The UUID for the mandate
+              example: 28d627c3-1889-44c8-ae59-6f6b20239260
+        proprietarySchemeDetails:
+          title: proprietarySchemeDetails
+          description: >-
+            Extra details about the transaction based on the scheme used to make
+            the payment.
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: >-
+                  the type of proprietary scheme - SCT for SEPA, FPS for Faster
+                  Payments etc.
+                example: SCT
+              data:
+                type: string
+                example: >-
+                  remittanceInfoUnstructured^FIRE440286865OD1|instructionId^O223151336499079
+                description: >-
+                  the scheme proprietary data - key pairs separated by | and
+                  key/values separated by ^
+        relatedParty:
+          title: relatedParty
+          description: Details of the related third party involved in the transaction.
+          oneOf:
+            - title: relatedPartyFireAccount
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - FIRE_ACCOUNT
+                account:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                      description: >-
+                        identifier for the fire.com account (assigned by
+                        fire.com)
+                      example: 42
+                    alias:
+                      type: string
+                      description: >-
+                        the name the user gives to the account to help them
+                        identify it.
+                      example: Main Account
+                    bic:
+                      type: string
+                      example: CPAYIE2D
+                      description: the BIC of the account (provided if currency is EUR).
+                    iban:
+                      type: string
+                      example: IE54CPAY99119911111111
+                      description: the IBAN of the account (provided if currency is EUR).
+                    nsc:
+                      type: string
+                      example: '232221'
+                      description: the Sort Code of the account.
+                    accountNumber:
+                      type: string
+                      example: '11111111'
+                      description: the Account Number of the account.
+            - title: relatedPartyExternalAccount
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - EXTERNAL_ACCOUNT
+                account:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                    alias:
+                      type: string
+                      description: >-
+                        the name the user gives to the account to help them
+                        identify it.
+                      example: Main Account
+                    nsc:
+                      type: string
+                      example: '232221'
+                      description: the Sort Code of the account.
+                    accountNumber:
+                      type: string
+                      example: '11111111'
+                      description: the Account Number of the account.
+                    bic:
+                      type: string
+                      example: CPAYIE2D
+                      description: the BIC of the account (provided if currency is EUR).
+                    iban:
+                      type: string
+                      example: IE54CPAY99119911111111
+                      description: the IBAN of the account (provided if currency is EUR).
+            - title: relatedPartyPayee
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - WITHDRAWAL_ACCOUNT
+                account:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                      example: 123
+                      description: The ID of the payee.
+                    alias:
+                      type: string
+                      example: Smyth and Co.
+                      description: The name of the payee.
+                    nsc:
+                      type: string
+                      example: '991199'
+                      description: The sort code of the payee (for GBP payments)
+                    accountNumber:
+                      type: string
+                      example: '00000000'
+                      description: The account number of the payee (for GBP payments)
+                    bic:
+                      type: string
+                      example: CPAYIE2D
+                      description: The BIC of the payee (for EUR payments)
+                    iban:
+                      type: string
+                      example: IE76CPAY99119900000000
+                      description: The IBAN of the payee (for EUR payments)
+            - title: relatedPartyCardPayment
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - CARD_MERCHANT
+                    - CARD_ATM
+                cardMerchant:
+                  type: object
+                  properties:
+                    acquirerIdDe32:
+                      type: string
+                      example: 06011329
+                    additionalAmtDe54:
+                      type: string
+                    authCodeDe38:
+                      type: string
+                      example: '177449'
+                    billAmt:
+                      type: integer
+                      format: int64
+                      example: -1000
+                    billCcy:
+                      type: string
+                      example: '978'
+                    expiryDate:
+                      type: string
+                    mccCode:
+                      type: string
+                      example: '5521'
+                    merchIdDe42:
+                      type: string
+                      example: 013152429
+                    merchNameDe43:
+                      type: string
+                      example: ABC Coffee Shop
+                    posDataDe61:
+                      type: string
+                      example: 000001000030037299999
+                    posTermnlDe41:
+                      type: string
+                      example: '80266721'
+                    posDataDe22:
+                      type: string
+                      example: '051'
+                    procCode:
+                      type: string
+                      example: '000000'
+                    respCodeDe39:
+                      type: string
+                      example: '00'
+                    retRefNoDe37:
+                      type: string
+                      example: 010900006720
+                    statusCode:
+                      type: string
+                      example: '00'
+                    token:
+                      type: string
+                      example: '976307363'
+                    txnAmt4d:
+                      type: integer
+                      format: int64
+                      example: 1000
+                    txnCcy:
+                      type: string
+                      example: '978'
+                    txnCtry:
+                      type: string
+                      example: IRL
+                    txnDesc:
+                      type: string
+                      example: ABC Coffee Shop
+                    txnStatCode:
+                      type: string
+                      example: A
+                    txnType:
+                      type: string
+                      example: A
+                    additionalDataDe48:
+                      type: string
+                      example: 010X610500000
+                    authorisedByGps:
+                      type: string
+                      example: 'N'
+                    avsResult:
+                      type: string
+                      example: 'N'
+                    mtId:
+                      type: string
+                      example: '0100'
+                    recordDataDe120:
+                      type: string
+                    additionalDataDe124:
+                      type: string
+        eventUuid:
+          type: string
+          description: An internal Fire reference for the transaction (UUID)
+          example: 42de0705-e3f1-44fa-8c41-79973eb80eb2
 security:
   - bearerAuth: []
 tags:

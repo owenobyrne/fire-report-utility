@@ -23,6 +23,695 @@ declare namespace Components {
         export interface UnauthorisedError {
         }
     }
+    namespace Schemas {
+        /**
+         * Account
+         */
+        export interface Account {
+            /**
+             * identifier for the fire.com account (assigned by fire.com)
+             * example:
+             * 42
+             */
+            ican?: number; // int64
+            /**
+             * the name the user gives to the account to help them identify it.
+             * example:
+             * Main Account
+             */
+            name?: string;
+            /**
+             * Internal Use
+             * example:
+             * ORANGE
+             */
+            colour?: string;
+            /**
+             * currency
+             * The currency.
+             */
+            currency?: {
+                /**
+                 * The three letter code for the currency.
+                 * example:
+                 * EUR
+                 */
+                code?: string;
+                /**
+                 * The name of the currency
+                 * example:
+                 * Euro
+                 */
+                description?: string;
+            };
+            /**
+             * the balance of the account (in minor currency units - pence, cent etc. 434050 == 4,340.50 GBP for a GBP account).
+             * example:
+             * 23950
+             */
+            balance?: number; // int64
+            /**
+             * Live accounts can be used as normal. Migrated accounts were used before Brexit and are read-only.
+             */
+            status?: "LIVE" | "BREXIT_MIGRATED";
+            /**
+             * the BIC of the account (provided if currency is EUR).
+             * example:
+             * CPAYIE2D
+             */
+            cbic?: string;
+            /**
+             * the IBAN of the account (provided if currency is EUR).
+             * example:
+             * IE54CPAY99119911111111
+             */
+            ciban?: string;
+            /**
+             * the Sort Code of the account.
+             * example:
+             * 232221
+             */
+            cnsc?: string;
+            /**
+             * the Account Number of the account.
+             * example:
+             * 11111111
+             */
+            ccan?: string;
+            /**
+             * true if this is the default account for this currency. This will be the account that general fees are taken from (as opposed to per-transaction fees).
+             * example:
+             * true
+             */
+            defaultAccount?: boolean;
+            /**
+             * Whether or not direct debits can be set up on this account.
+             * example:
+             * false
+             */
+            directDebitsAllowed?: boolean;
+            /**
+             * Indicates that this account is for collecting Fire Open Payments only. All other payments to this account will be returned.
+             * example:
+             * false
+             */
+            fopOnly?: boolean;
+        }
+        /**
+         * transaction
+         */
+        export interface Transaction {
+            /**
+             * The id of this side of the transaction (each transaction has two sides - a to and a from). This is used to get the details of the transaction.
+             * example:
+             * 30157
+             */
+            txnId?: number; // int64
+            /**
+             * The id of the transaction.
+             * example:
+             * 26774
+             */
+            refId?: number; // int64
+            /**
+             * identifier for the fire.com account (assigned by fire.com) This field is only used in the condensed version.
+             * example:
+             * 1951
+             */
+            ican?: number; // int64
+            /**
+             * currency
+             * The currency.
+             */
+            currency?: {
+                /**
+                 * The three letter code for the currency.
+                 * example:
+                 * EUR
+                 */
+                code?: string;
+                /**
+                 * The name of the currency
+                 * example:
+                 * Euro
+                 */
+                description?: string;
+            };
+            /**
+             * Amount of the transaction before the fees and taxes were applied.
+             * example:
+             * 5000
+             */
+            amountBeforeCharges?: number; // int64
+            /**
+             * The amount of the fee, if any.
+             * example:
+             * 0
+             */
+            feeAmount?: number; // int64
+            /**
+             * The amount of the tax, if any (e.g. Stamp duty for ATM transactions)
+             * example:
+             * 0
+             */
+            taxAmount?: number; // int64
+            /**
+             * Net amount lodged or taken from the account after fees and charges were applied.
+             * example:
+             * 5000
+             */
+            amountAfterCharges?: number; // int64
+            /**
+             * the balance of the account (in minor currency units - pence, cent etc. 434050 == 4,340.50 GBP for a GBP account).
+             * example:
+             * 8500
+             */
+            balance?: number; // int64
+            /**
+             * The comment/reference on the transaction
+             * example:
+             * Transfer to main account
+             */
+            myRef?: string;
+            /**
+             * The comment/reference on the transaction that appears on the recipients statement. Only for withdrawals
+             * example:
+             * From John Smith
+             */
+            yourRef?: string;
+            /**
+             * Date of the transaction
+             * example:
+             * 2021-04-13T11:06:32.437Z
+             */
+            date?: string; // date-time
+            /**
+             * (FOP payments only) The FOP Payment Code that was used to make this payment.
+             * example:
+             * 1abcdefg
+             */
+            paymentRequestPublicCode?: string;
+            /**
+             * relatedCard
+             * Details of the card used (if applicable)
+             */
+            card?: {
+                cardId?: number; // int64
+                provider?: string;
+                alias?: string;
+                maskedPan?: string;
+                embossCardName?: string;
+                embossBusinessName?: string;
+                expiryDate?: string; // date-time
+            };
+            /**
+             * The type of the transaction:
+             * * `LODGEMENT` - Bank Transfer received
+             * * `PIS_LODGEMENT` - Fire Open Payments Lodgement received
+             * * `MANUAL_TRANSFER` - Manual Transfer to
+             * * `WITHDRAWAL` - Bank Transfer sent
+             * * `REVERSAL` - Credit Reversal
+             * * `DIRECT_DEBIT` - A direct debit.
+             * * `DIRECT_DEBIT_REPRESENTED` - A Direct Debit that was requested again after initially failing.
+             * * `DIRECT_DEBIT_REFUND` - A refund of a Direct debit.
+             * * `INTERNAL_TRANSFER_TO` - Internal Transfer sent (between two of my accounts of the same currency)
+             * * `INTERNAL_TRANSFER_FROM` - Internal Transfer received (between two of my accounts of the same currency)
+             * * `WITHDRAWAL_RETURNED` - Bank Transfer sent returned
+             * * `LODGEMENT_REVERSED` - Bank Transfer received returned
+             * * `FX_INTERNAL_TRANSFER_FROM` - FX Internal Transfer received (between two of my accounts of different currency)
+             * * `FX_INTERNAL_TRANSFER_TO` - FX Internal Transfer sent (between two of my accounts of different currency)
+             * * `CREATE_CARD` - The fee taken when a debit card is issued.
+             * * `ADD_ACCOUNT` - The fee taken when an account is created.
+             * * `CREATE_ADDITIONAL_USER` - The fee taken when an additional user is created.
+             * * `CARD_POS_CONTACT_DEBIT` - Card used in store; read by magnetic stripe or pin
+             * * `CARD_POS_CONTACT_CREDIT` - Card used in store; read by magnetic stripe or pin
+             * * `CARD_POS_CONTACTLESS_DEBIT` - Card used in store; read by NFC
+             * * `CARD_POS_CONTACTLESS_CREDIT` - Card used in store; read by NFC
+             * * `CARD_ECOMMERCE_DEBIT` - Card used on the internet
+             * * `CARD_ECOMMERCE_CREDIT` - Card used on the internet
+             * * `CARD_ATM_DEBIT` - Card used in an ATM
+             * * `CARD_ATM_CREDIT` - Card used in an ATM
+             * * `CARD_INTERNATIONAL_POS_CONTACT_DEBIT` - Card used in store in non-processing currency; read by magnetic stripe or pin
+             * * `CARD_INTERNATIONAL_POS_CONTACT_CREDIT` - Card used in store in non-processing currency; read by magnetic stripe or pin
+             * * `CARD_INTERNATIONAL_POS_CONTACTLESS_DEBIT` - Card used in store in non-processing currency; read by NFC
+             * * `CARD_INTERNATIONAL_POS_CONTACTLESS_CREDIT` - Card used in store in non-processing currency; read by NFC
+             * * `CARD_INTERNATIONAL_ECOMMERCE_DEBIT	` - Card used on the internet in non-processing currency
+             * * `CARD_INTERNATIONAL_ECOMMERCE_CREDIT` - Card used on the internet in non-processing currency
+             * * `CARD_INTERNATIONAL_ATM_DEBIT` - Card used in an ATM in non-processing currency
+             * * `CARD_INTERNATIONAL_ATM_CREDIT` - Card used in an ATM in non-processing currency
+             * * `CARD_POS_CONTACT_DEBIT_REVERSAL` - Card used in store; read by magnetic stripe or pin - reversed
+             * * `CARD_POS_CONTACT_CREDIT_REVERSAL` - Card used in store; read by magnetic stripe or pin - reversed
+             * * `CARD_POS_CONTACTLESS_DEBIT_REVERSAL` - Card used in store; read by NFC - reversed
+             * * `CARD_POS_CONTACTLESS_CREDIT_REVERSAL` - Card used in store; read by NFC - reversed
+             * * `CARD_ECOMMERCE_DEBIT_REVERSAL	` - Card used on the internet - reversed
+             * * `CARD_ECOMMERCE_CREDIT_REVERSAL` - Card used on the internet - reversed
+             * * `CARD_ATM_DEBIT_REVERSAL` - Card used in an ATM - reversed
+             * * `CARD_ATM_CREDIT_REVERSAL` - Card used in an ATM - reversed
+             * * `CARD_INTERNATIONAL_POS_CONTACT_DEBIT_REVERSAL` - Card used in store in non-processing currency; read by magnetic stripe or pin - reversed
+             * * `CARD_INTERNATIONAL_POS_CONTACT_CREDIT_REVERSAL` - Card used in store in non-processing currency; read by magnetic stripe or pin - reversed
+             * * `CARD_INTERNATIONAL_POS_CONTACTLESS_DEBIT_REVERSAL` - Card used in store in non-processing currency; read by NFC - reversed
+             * * `CARD_INTERNATIONAL_POS_CONTACTLESS_CREDIT_REVERSAL` - One or more of the transaction types above. This field can be repeated multiple times to allow for multiple transaction types.
+             * * `CARD_INTERNATIONAL_ECOMMERCE_DEBIT_REVERSAL` - Card used in store in non-processing currency; read by NFC - reversed
+             * * `CARD_INTERNATIONAL_ECOMMERCE_CREDIT_REVERSAL` - Card used in store in non-processing currency; read by NFC - reversed
+             * * `CARD_INTERNATIONAL_ATM_DEBIT_REVERSAL` - Card used on the internet in non-processing currency - reversed
+             * * `CARD_INTERNATIONAL_ATM_CREDIT_REVERSAL` - Card used on the internet in non-processing currency - reversed
+             *
+             * example:
+             * WITHDRAWAL
+             */
+            type?: string;
+            /**
+             * example:
+             * 2021-04-13T11:06:32.437Z
+             */
+            dateAcknowledged?: string; // date-time
+            /**
+             * fxTrade
+             * Details of the FX trade (if applicable)
+             */
+            fxTradeDetails?: {
+                /**
+                 * currency which is being bought
+                 * example:
+                 * GBP
+                 */
+                buyCurrency?: string;
+                /**
+                 * currency which is being sold
+                 * example:
+                 * EUR
+                 */
+                sellCurrency?: string;
+                /**
+                 * type of trade - BUY or SELL
+                 * example:
+                 * SELL
+                 */
+                fixedSide?: string;
+                /**
+                 * amount of buyCurrency being bought
+                 * example:
+                 * 359
+                 */
+                buyAmount?: number; // int64
+                /**
+                 * amount of sellCurrency being sold
+                 * example:
+                 * 500
+                 */
+                sellAmount?: number; // int64
+                /**
+                 * exchange rate
+                 * example:
+                 * 7180
+                 */
+                rate4d?: number; // int64
+                /**
+                 * The FX provider used to make the trade.
+                 * example:
+                 * TCC
+                 */
+                provider?: string;
+            };
+            /**
+             * batchItemDetails
+             * Details of the batch run if this transaction was part of a batch.
+             */
+            batchItemDetails?: {
+                /**
+                 * The UUID for this batch.
+                 * example:
+                 * F2AF3F2B-4406-4199-B249-B354F2CC6019
+                 */
+                batchPublicUuid?: string;
+                /**
+                 * The UUID for this item in the batch.
+                 * example:
+                 * F2AF3F2B-4406-4199-B249-B354F2CC6019
+                 */
+                batchItemPublicUuid?: string;
+                /**
+                 * The optional name given to the batch at creation time.
+                 * example:
+                 * Payroll 2022-11
+                 */
+                batchName?: string;
+                /**
+                 * The optional job number given to the batch to link it to your own system.
+                 * example:
+                 * 2018-01-PR
+                 */
+                jobNumber?: string;
+            };
+            /**
+             * directDebitDetails
+             * Details of the direct debit (if applicable)
+             */
+            directDebitDetails?: {
+                /**
+                 * The UUID for the direct debit payment
+                 * example:
+                 * 42de0705-e3f1-44fa-8c41-79973eb80eb2
+                 */
+                directDebitUuid?: string;
+                /**
+                 * The UUID for the mandate
+                 * example:
+                 * f171b143-e3eb-47de-85a6-1c1f1108c701
+                 */
+                mandateUUid?: string;
+                /**
+                 * Set by party who sets up the direct debit.
+                 * example:
+                 * VODA-123456
+                 */
+                originatorReference?: string;
+                /**
+                 * The creator of the party who sets up the direct debit.
+                 * example:
+                 * Vodafone PLC
+                 */
+                originatorName?: string;
+                /**
+                 * The Alias of the party who sets up the direct debit.
+                 * example:
+                 * Three
+                 */
+                originatorAlias?: string;
+                /**
+                 * The direct debit reference.
+                 * example:
+                 * VODA-ABC453-1
+                 */
+                directDebitReference?: string;
+                /**
+                 * URL pointing to a small version of the Originator Logo (if available)
+                 * example:
+                 * https://s3-eu-west-1.amazonaws.com/live-fire-assets/prod/49dc9a01-8261-4d98-bebf-c3842c2d3c5d-small.png
+                 */
+                originatorLogoUrlSmall?: string;
+                /**
+                 * URL pointing to a large version of the Originator Logo (if available)
+                 * example:
+                 * https://s3-eu-west-1.amazonaws.com/live-fire-assets/prod/49dc9a01-8261-4d98-bebf-c3842c2d3c5d-small.png
+                 */
+                originatorLogoUrlLarge?: string;
+                /**
+                 * the reference of the mandate
+                 * example:
+                 * CRZ-102190123
+                 */
+                mandateReference?: string;
+                /**
+                 * The UUID for the mandate
+                 * example:
+                 * 28d627c3-1889-44c8-ae59-6f6b20239260
+                 */
+                mandateUuid?: string;
+            };
+            /**
+             * proprietarySchemeDetails
+             * Extra details about the transaction based on the scheme used to make the payment.
+             */
+            proprietarySchemeDetails?: {
+                /**
+                 * the type of proprietary scheme - SCT for SEPA, FPS for Faster Payments etc.
+                 * example:
+                 * SCT
+                 */
+                type?: string;
+                /**
+                 * the scheme proprietary data - key pairs separated by | and key/values separated by ^
+                 * example:
+                 * remittanceInfoUnstructured^FIRE440286865OD1|instructionId^O223151336499079
+                 */
+                data?: string;
+            }[];
+            /**
+             * relatedParty
+             * Details of the related third party involved in the transaction.
+             */
+            relatedParty?: /**
+             * relatedParty
+             * Details of the related third party involved in the transaction.
+             */
+            {
+                type?: "FIRE_ACCOUNT";
+                account?: {
+                    /**
+                     * identifier for the fire.com account (assigned by fire.com)
+                     * example:
+                     * 42
+                     */
+                    id?: number; // int64
+                    /**
+                     * the name the user gives to the account to help them identify it.
+                     * example:
+                     * Main Account
+                     */
+                    alias?: string;
+                    /**
+                     * the BIC of the account (provided if currency is EUR).
+                     * example:
+                     * CPAYIE2D
+                     */
+                    bic?: string;
+                    /**
+                     * the IBAN of the account (provided if currency is EUR).
+                     * example:
+                     * IE54CPAY99119911111111
+                     */
+                    iban?: string;
+                    /**
+                     * the Sort Code of the account.
+                     * example:
+                     * 232221
+                     */
+                    nsc?: string;
+                    /**
+                     * the Account Number of the account.
+                     * example:
+                     * 11111111
+                     */
+                    accountNumber?: string;
+                };
+            } | {
+                type?: "EXTERNAL_ACCOUNT";
+                account?: {
+                    id?: number; // int64
+                    /**
+                     * the name the user gives to the account to help them identify it.
+                     * example:
+                     * Main Account
+                     */
+                    alias?: string;
+                    /**
+                     * the Sort Code of the account.
+                     * example:
+                     * 232221
+                     */
+                    nsc?: string;
+                    /**
+                     * the Account Number of the account.
+                     * example:
+                     * 11111111
+                     */
+                    accountNumber?: string;
+                    /**
+                     * the BIC of the account (provided if currency is EUR).
+                     * example:
+                     * CPAYIE2D
+                     */
+                    bic?: string;
+                    /**
+                     * the IBAN of the account (provided if currency is EUR).
+                     * example:
+                     * IE54CPAY99119911111111
+                     */
+                    iban?: string;
+                };
+            } | {
+                type?: "WITHDRAWAL_ACCOUNT";
+                account?: {
+                    /**
+                     * The ID of the payee.
+                     * example:
+                     * 123
+                     */
+                    id?: number; // int64
+                    /**
+                     * The name of the payee.
+                     * example:
+                     * Smyth and Co.
+                     */
+                    alias?: string;
+                    /**
+                     * The sort code of the payee (for GBP payments)
+                     * example:
+                     * 991199
+                     */
+                    nsc?: string;
+                    /**
+                     * The account number of the payee (for GBP payments)
+                     * example:
+                     * 00000000
+                     */
+                    accountNumber?: string;
+                    /**
+                     * The BIC of the payee (for EUR payments)
+                     * example:
+                     * CPAYIE2D
+                     */
+                    bic?: string;
+                    /**
+                     * The IBAN of the payee (for EUR payments)
+                     * example:
+                     * IE76CPAY99119900000000
+                     */
+                    iban?: string;
+                };
+            } | {
+                type?: "CARD_MERCHANT" | "CARD_ATM";
+                cardMerchant?: {
+                    /**
+                     * example:
+                     * 06011329
+                     */
+                    acquirerIdDe32?: string;
+                    additionalAmtDe54?: string;
+                    /**
+                     * example:
+                     * 177449
+                     */
+                    authCodeDe38?: string;
+                    /**
+                     * example:
+                     * -1000
+                     */
+                    billAmt?: number; // int64
+                    /**
+                     * example:
+                     * 978
+                     */
+                    billCcy?: string;
+                    expiryDate?: string;
+                    /**
+                     * example:
+                     * 5521
+                     */
+                    mccCode?: string;
+                    /**
+                     * example:
+                     * 013152429
+                     */
+                    merchIdDe42?: string;
+                    /**
+                     * example:
+                     * ABC Coffee Shop
+                     */
+                    merchNameDe43?: string;
+                    /**
+                     * example:
+                     * 000001000030037299999
+                     */
+                    posDataDe61?: string;
+                    /**
+                     * example:
+                     * 80266721
+                     */
+                    posTermnlDe41?: string;
+                    /**
+                     * example:
+                     * 051
+                     */
+                    posDataDe22?: string;
+                    /**
+                     * example:
+                     * 000000
+                     */
+                    procCode?: string;
+                    /**
+                     * example:
+                     * 00
+                     */
+                    respCodeDe39?: string;
+                    /**
+                     * example:
+                     * 010900006720
+                     */
+                    retRefNoDe37?: string;
+                    /**
+                     * example:
+                     * 00
+                     */
+                    statusCode?: string;
+                    /**
+                     * example:
+                     * 976307363
+                     */
+                    token?: string;
+                    /**
+                     * example:
+                     * 1000
+                     */
+                    txnAmt4d?: number; // int64
+                    /**
+                     * example:
+                     * 978
+                     */
+                    txnCcy?: string;
+                    /**
+                     * example:
+                     * IRL
+                     */
+                    txnCtry?: string;
+                    /**
+                     * example:
+                     * ABC Coffee Shop
+                     */
+                    txnDesc?: string;
+                    /**
+                     * example:
+                     * A
+                     */
+                    txnStatCode?: string;
+                    /**
+                     * example:
+                     * A
+                     */
+                    txnType?: string;
+                    /**
+                     * example:
+                     * 010X610500000
+                     */
+                    additionalDataDe48?: string;
+                    /**
+                     * example:
+                     * N
+                     */
+                    authorisedByGps?: string;
+                    /**
+                     * example:
+                     * N
+                     */
+                    avsResult?: string;
+                    /**
+                     * example:
+                     * 0100
+                     */
+                    mtId?: string;
+                    recordDataDe120?: string;
+                    additionalDataDe124?: string;
+                };
+            };
+            /**
+             * An internal Fire reference for the transaction (UUID)
+             * example:
+             * 42de0705-e3f1-44fa-8c41-79973eb80eb2
+             */
+            eventUuid?: string;
+        }
+    }
 }
 declare namespace Paths {
     namespace ActivateMandate {
@@ -10185,3 +10874,6 @@ export interface PathsDictionary {
 }
 
 export type Client = OpenAPIClient<OperationMethods, PathsDictionary>
+
+export type Account = Components.Schemas.Account;
+export type Transaction = Components.Schemas.Transaction;

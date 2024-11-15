@@ -84,7 +84,7 @@ $("#runreport").on('click', function (event : any) {
         
     }
 
-    $('#progressbar').progress("reset");
+    $("#progressbar").removeClass("swinging indeterminate");
     $("#runreport").addClass("loading");
     $("#runreport").prop("disabled", true);
     $("#stopreport").show(); 
@@ -101,10 +101,10 @@ $("#stopreport").on("click", function(event: any) {
     // give any backend stuff time to complete, then reset. (not working for the second bar yet.... weird)
     setTimeout(function() {
         // $('#progressbar-accounts').progress("reset");
-        $('#progressbar').progress("remove success");
-        $('#progressbar').progress("set progress", 0);
+        // $('#progressbar').progress("remove success");
+        // $('#progressbar').progress("set progress", 0);
         
-        $('#progressbar').progress("reset");
+        $("#progressbar").removeClass("swinging indeterminate");
     
     }, 1000);
 
@@ -138,10 +138,10 @@ window.api.receive("report-finished", function(data: any) {
     // give any backend stuff time to complete, then reset. (not working for the second bar yet.... weird)
     setTimeout(function() {
         // $('#progressbar-accounts').progress("reset");
-        $('#progressbar').progress("remove success");
-        $('#progressbar').progress("set progress", 0);
+        // $('#progressbar').progress("remove success");
+        // $('#progressbar').progress("set progress", 0);
         
-        $('#progressbar').progress("reset");
+        $("#progressbar").removeClass("swinging indeterminate");
    
     }, 1000);
 });
@@ -164,19 +164,22 @@ window.api.receive("configs", function(version: string, showBeta: boolean, confi
 
 
 window.api.receive("progress-update", function(param : any) {
+    console.log(param);
     var allAccountsLabel = "";
-    if (param.accountsProcessed > 1) {
+    var selectedAccount =  $('.ui.dropdown').dropdown("get value");
+
+    if (selectedAccount == "all") {
         allAccountsLabel = `Account ${param.accountsProcessed} of ${param.totalNumAccounts} /`;
     }
     
-    $("#progressbar")
-        .progress("set total", param.total)
-        .progress("set progress", param.progress)
-        .progress("set label", `${allAccountsLabel} Retrieved ${param.progress} of ${param.total} transactions...`);
-
-    if (param.progress == param.total) {
+    if (param.complete) {
         $("#runreport").removeClass("loading");
-        $("#progressbar").progress("set label", "");
+        $("#progressbar").removeClass("swinging indeterminate");
+        $("#progressbar").progress("set label", " ");
+
+    } else {
+        $("#progressbar").addClass("blue swinging indeterminate");
+        $("#progressbar").progress("set label", `${allAccountsLabel} Retrieved ${param.progress} transactions...`);
     }
 });
 

@@ -8,15 +8,9 @@ npm install
 ```
 to download and install all the necessary libraries and utilities. 
 
-To generate the API type file from the OpenAPI def first resolve all `$refs`. There's a bug in the typegen script that results in some refs being ignored.
-```bash
-npm install json-refs --g
-json-refs resolve ./static/fire-business-api-v1.yaml > ./static/fire-business-api-v1-resolved.yaml
-``` 
-
 Then create the type file - run the npx command without the > param first to install it. 
 ```bash
-npx openapicmd typegen ./static/fire-business-api-v1-resolved.yaml > ./src/types/fire-business-api.d.ts
+npx openapicmd typegen ./static/fire-business-api-v1.yaml > ./src/types/fire-business-api.d.ts
 ```
 
 

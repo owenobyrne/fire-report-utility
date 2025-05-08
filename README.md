@@ -54,8 +54,15 @@ npm start make
 # Publishing
 To publish a new version, up the package.json version and run:
 ```bash
-export GITHUB_TOKEN=xxx
+# windows cmd prompt
+set GITHUB_TOKEN=xxx
 npm run publish
+
+# mac
+# check password manager
+APPLE_ID=<apple login email> 
+APPLE_ID_PASSWORD=<per-app-password> 
+GITHUB_TOKEN=xxx npm run publish
 ```
 
 This will push a new exe to Github which will notify existing installs to update.
